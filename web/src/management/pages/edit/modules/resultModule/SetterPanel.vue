@@ -22,8 +22,8 @@ import statusConfig from '@/management/pages/edit/setterConfig/statusConfig'
 import SetterField from '@/management/pages/edit/components/SetterField.vue'
 
 const textMap = {
-  Success: '提交成功页面配置',
-  OverTime: '问卷过期页面配置'
+  Success: 'Kirim konfigurasi halaman yang berhasil',
+  OverTime: 'Konfigurasi halaman yang telah kedaluwarsa'
 }
 
 const editStore = useEditStore()

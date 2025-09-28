@@ -69,12 +69,16 @@ const routes = [
       &::before {
         content: '';
         position: absolute;
-        width: 90px;
         height: 3px;
         background-color: $primary-color;
-        bottom: -16px;
-        left: 20px;
-        z-index: 99;
+        bottom: -8px;
+
+         /* Centering magic */
+        left: 50%;
+        transform: translateX(-50%);
+
+        /* Panjang garis sesuai keinginan */
+        width: 50%; /* misalnya setengah lebar tombol */
       }
     }
 

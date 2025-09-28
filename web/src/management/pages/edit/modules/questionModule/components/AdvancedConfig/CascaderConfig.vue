@@ -56,14 +56,14 @@
         <template v-for="(item, key) in cascaderVal" :key="key">
           <div v-if="key == 0 || (cascaderVal[key - 1])" @click="addCascaderNode(key)" class="add-node-item">
             <i-ep-Plus />
-            添加选项
+            Tambahkan opsi
           </div>
         </template>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="configVisible = false">取消</el-button>
-          <el-button type="primary" @click="cascaderConfigChange">确认</el-button>
+          <el-button @click="configVisible = false">Batal</el-button>
+          <el-button type="primary" @click="cascaderConfigChange">Konfirmasi</el-button>
         </span>
       </template>
     </el-dialog>

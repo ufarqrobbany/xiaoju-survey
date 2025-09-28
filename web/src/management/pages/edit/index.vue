@@ -1,6 +1,5 @@
 <template>
   <div class="edit-layout">
-    <LeftMenu class="left-menu"></LeftMenu>
     <div class="main-content">
       <CommonTemplate style="background-color: #f6f7f9">
         <template #nav>
@@ -15,14 +14,13 @@
 </template>
 
 <script setup lang="ts">
-// --- Bagian <script> tidak perlu diubah, sudah sangat baik ---
 import { onMounted, watch } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import LeftMenu from '@/management/components/LeftMenu.vue'
+// Import LeftMenu sudah tidak diperlukan lagi
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
 
@@ -75,38 +73,25 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-// --- REFAKTOR TOTAL STYLE DENGAN PENDEKATAN MOBILE-FIRST ---
 .edit-layout {
   display: flex;
-  // Awalnya, layout disusun vertikal untuk mobile
-  flex-direction: column;
-  height: 100vh; // Mengisi seluruh tinggi layar
-  width: 100%;
+  /* Layout sekarang hanya satu kolom utama yang membentang secara horizontal */
+  flex-direction: row; 
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
+  background-color: #f6f7f9;
 }
 
 .main-content {
-  // Konten utama akan mengisi sisa ruang yang tersedia
-  flex-grow: 1;
-  // Penting agar CommonTemplate bisa mengisi 100% tinggi
+  flex: 1;
+  min-width: 0; 
   height: 100%;
   overflow: hidden;
+  display: flex; /* Memastikan CommonTemplate mengisi semua ruang */
 }
 
 .navbar {
   border-bottom: 1px solid #e7e9eb;
 }
-
-// --- Media Query untuk layar lebih besar (Tablet & Desktop) ---
-@media (min-width: 768px) {
-  .edit-layout {
-    // Ubah layout menjadi horizontal (sidebar di kiri, konten di kanan)
-    flex-direction: row;
-  }
-}
-
-// --- CATATAN PENTING ---
-// Pastikan LeftMenu.vue juga sudah memiliki style responsif
-// seperti yang pernah kita diskusikan sebelumnya, agar bisa
-// berubah menjadi bottom-nav di mobile dan sidebar di desktop.
 </style>

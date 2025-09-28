@@ -1,22 +1,22 @@
 <template>
   <div class="white-list-wrap">
-    <el-button class="create-btn" type="primary" @click="whiteVisible = true"> 添加 </el-button>
+    <el-button class="create-btn" type="primary" @click="whiteVisible = true"> Tambahkan ke Daftar Putih </el-button>
     <el-button v-if="whitelist.length > 0" class="create-btn" color="#4A4C5B" @click="delAllList">
-      全部删除
+      Hapus Semua
     </el-button>
     <el-table
       class="table-wrap"
-      empty-text="暂无数据"
+      empty-text="Belum ada data"
       :data="whitelist"
       height="240"
       style="width: 426px"
     >
-      <el-table-column label="名单" width="350">
+      <el-table-column label="Daftar Putih" width="350">
         <template #default="scope">
           <div>{{ whitelist[scope.$index] }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="74">
+      <el-table-column label="Operasi" width="74">
         <template #default="scope">
           <div @click="delRowItem(scope.$index)" class="flex cursor">
             <i-ep-delete :size="16" />
@@ -24,18 +24,18 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog v-model="whiteVisible" title="添加白名单" width="600" @closed="handleClose">
+    <el-dialog v-model="whiteVisible" title="Tambahkan ke Daftar Putih" width="600" @closed="handleClose">
       <div>
-        <el-form-item label-position="top" label="类型选择" label-width="auto">
+        <el-form-item label-position="top" label="Jenis" label-width="auto">
           <el-radio-group v-model="memberType" @change="handleTypeChange">
-            <el-radio value="MOBILE">手机号</el-radio>
-            <el-radio value="EMAIL">邮箱</el-radio>
+            <el-radio value="MOBILE">Nomor Telepon</el-radio>
+            <el-radio value="EMAIL">Email</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label-position="top" class="flex-column" label="名单录入" label-width="auto">
+        <el-form-item label-position="top" class="flex-column" label="Daftar Putih" label-width="auto">
           <el-input
             v-model="whiteTextarea"
-            placeholder="多个用逗号(半角)“,”隔开"
+            placeholder="Beberapa dipisahkan dengan koma (,) "
             rows="7"
             resize="none"
             type="textarea"
@@ -44,8 +44,8 @@
       </div>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="whiteVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleChange"> 确定 </el-button>
+          <el-button @click="whiteVisible = false">Batal</el-button>
+          <el-button type="primary" @click="handleChange"> Konfirmasi </el-button>
         </div>
       </template>
     </el-dialog>
@@ -75,7 +75,7 @@ const regularMap = {
 const checkValRule = (list) => {
   let status = false
   if (list.length > 100) {
-    ElMessage.error('最多添加100个')
+    ElMessage.error('Tambahkan hingga 100')
     return true
   }
   const pattern = regularMap[memberType.value]
@@ -84,7 +84,7 @@ const checkValRule = (list) => {
   for (let i = 0; i < list.length; i++) {
     if (!pattern.test(list[i])) {
       status = true
-      ElMessage.error('格式错误，请检查后重新输入~')
+      ElMessage.error('Format salah, silakan periksa dan masukkan kembali~')
       break
     }
   }

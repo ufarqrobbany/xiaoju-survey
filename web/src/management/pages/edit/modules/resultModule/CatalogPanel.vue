@@ -1,6 +1,6 @@
 <template>
   <div class="tab-box">
-    <div class="title">结果页状态选择</div>
+    <div class="title">Status Halaman Hasil</div>
     <div class="status-list-wrapper">
       <div
         v-for="(status, index) in statusList"
@@ -27,12 +27,12 @@ const { currentEditStatus } = storeToRefs(editStore)
 const statusList = [
   {
     type: EDIT_STATUS_MAP.SUCCESS,
-    title: '提交成功',
+    title: 'Berhasil dikirim',
     previewImg: '/imgs/icons/success.webp'
   },
   {
     type: EDIT_STATUS_MAP.OVERTIME,
-    title: '问卷过期',
+    title: 'Berhasil dikirim',
     previewImg: '/imgs/icons/overtime.webp'
   }
 ]

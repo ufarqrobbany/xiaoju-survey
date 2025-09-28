@@ -1,34 +1,34 @@
 export const type = {
-  normal: '基础调查',
-  vote: '投票评选',
-  nps: 'NPS评分',
-  register: '在线报名'
+  normal: 'Survei Dasar',
+  vote: 'Voting & Penilaian',
+  nps: 'Skor NPS',
+  register: 'Pendaftaran Online',
 }
 
 export const spaceListConfig = {
   name: {
-    title: '空间名称',
+    title: 'Nama Ruang',
     key: 'name',
     width: 200
   },
   surveyTotal: {
-    title: '问卷数',
+    title: 'Jumlah Survei',
     key: 'surveyTotal',
     width: 150,
     tip: true
   },
   memberTotal: {
-    title: '成员数',
+    title: 'Jumlah Anggota',
     key: 'memberTotal',
     width: 150
   },
   owner: {
-    title: '所有者',
+    title: 'Pemilik',
     key: 'owner',
     width: 150
   },
   createdAt: {
-    title: '创建时间',
+    title: 'Waktu Dibuat',
     key: 'createdAt',
     minWidth: 200
   }
@@ -36,18 +36,18 @@ export const spaceListConfig = {
 
 export const groupListConfig = {
   name: {
-    title: '分组名称',
+    title: 'Nama Grup',
     key: 'name',
     width: 200
   },
   surveyTotal: {
-    title: '问卷数',
+    title: 'Jumlah Survei',
     key: 'surveyTotal',
     width: 150,
     tip: true
   },
   createdAt: {
-    title: '创建时间',
+    title: 'Waktu Dibuat',
     key: 'createdAt',
     minWidth: 200
   }
@@ -55,94 +55,94 @@ export const groupListConfig = {
 
 export const fieldConfig = {
   type: {
-    title: '类型',
+    title: 'Jenis',
     key: 'type',
     width: 150,
     comp: 'TagModule'
   },
   title: {
-    title: '标题',
+    title: 'Judul',
     key: 'title',
     width: 240,
     tip: true
   },
   remark: {
-    title: '备注',
+    title: 'Catatan',
     key: 'remark',
     width: 200,
     tip: true
   },
   state: {
-    title: '状态',
+    title: 'Status',
     key: 'state',
     width: 140,
     comp: 'StateModule'
   },
   owner: {
-    title: '所有者',
+    title: 'Pemilik',
     key: 'owner',
     width: 140
   },
   updatedAt: {
-    title: '更新时间',
+    title: 'Waktu Diperbarui',
     key: 'updatedAt',
     minWidth: 200
   },
   createdAt: {
-    title: '创建时间',
+    title: 'Waktu Dibuat',
     key: 'createdAt',
     minWidth: 200
   }
 }
 
 export const noListDataConfig = {
-  title: '您还没有创建问卷',
-  desc: '赶快点击右上角立即创建问卷吧！',
+  title: 'Anda belum membuat survei',
+  desc: 'Segera klik pojok kanan atas untuk membuat survei!',
   img: '/imgs/icons/list-empty.webp'
 }
 
 export const noSpaceDataConfig = {
-  title: '您还没有创建团队空间',
-  desc: '赶快点击右上角立即创建团队空间吧！',
+  title: 'Anda belum membuat ruang tim',
+  desc: 'Segera klik pojok kanan atas untuk membuat ruang tim!',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noSpaceSearchDataConfig = {
-  title: '没有满足该查询条件的团队空间',
-  desc: '可以更换条件查询试试',
+  title: 'Tidak ada ruang tim yang memenuhi syarat pencarian ini',
+  desc: 'Anda dapat mencoba mengubah kondisi pencarian',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noGroupDataConfig = {
-  title: '您还没有创建问卷分组',
-  desc: '赶快点击右上角立即创建问卷分组吧！',
+  title: 'Anda belum membuat grup survei',
+  desc: 'Segera klik pojok kanan atas untuk membuat grup survei!',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noGroupSearchDataConfig = {
-  title: '没有满足该查询条件的问卷分组哦',
-  desc: '可以更换条件查询试试',
+  title: 'Tidak ada grup survei yang memenuhi syarat pencarian ini',
+  desc: 'Anda dapat mencoba mengubah kondisi pencarian',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noSearchDataConfig = {
-  title: '没有满足该查询条件的问卷',
-  desc: '可以更换条件查询试试',
+  title: 'Tidak ada survei yang memenuhi syarat pencarian ini',
+  desc: 'Anda dapat mencoba mengubah kondisi pencarian',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noDownloadTaskConfig = {
-  title: '没有下载任务',
-  desc: '可以在数据分析进行下载',
+  title: 'Tidak ada tugas unduhan',
+  desc: 'Anda dapat mengunduhnya di analisis data',
   img: '/imgs/icons/list-empty.webp'
 }
 
 export const curStatus = {
   new: {
     value: 'new',
-    label: '未发布'
+    label: 'Belum diterbitkan'
   },
   published: {
     value: 'published',
-    label: '已发布'
+    label: 'Sudah diterbitkan'
   },
   editing: {
-    label: '修改中',
+    label: 'Sedang diedit',
     value: 'editing'
   }
 }
@@ -150,7 +150,7 @@ export const curStatus = {
 // 子状态
 export const subStatus = {
   pausing: {
-    label: '暂停中',
+    label: 'Sedang dijeda',
     value: 'pausing'
   }
 }
@@ -165,15 +165,15 @@ export const subStatusKey = 'subStatus.status'
 
 // 问卷类型
 export const surveyTypeSelect = {
-  label: '问卷类型',
+  label: 'Jenis Kuesioner',
   value: [
     {
       value: '',
-      label: '全部类型'
+      label: 'Semua Tipe'
     },
     {
       value: 'normal',
-      label: '基础调查'
+      label: 'Survei Dasar'
     },
     // {
     //   value: 'exam',
@@ -185,23 +185,23 @@ export const surveyTypeSelect = {
     // },
     {
       value: 'vote',
-      label: '投票评选'
+      label: 'Voting'
     },
     {
       value: 'register',
-      label: '在线报名'
+      label: 'Pendaftaran Online'
     }
   ],
   default: ''
 }
 
-// 问卷状态
+// Status Kuesioner
 export const curStatusSelect = {
-  label: '问卷状态',
+  label: 'Status Kuesioner',
   value: [
     {
       value: '',
-      label: '全部状态'
+      label: 'Semua Status'
     },
     curStatus.new,
     curStatus.published,
@@ -218,7 +218,7 @@ export const selectOptionsDict = Object.freeze({
 
 export const buttonOptionsDict = Object.freeze({
   updatedAt: {
-    label: '更新时间',
+    label: 'Waktu Diperbarui',
     icons: [
       {
         name: 'el-icon-sort',
@@ -239,7 +239,7 @@ export const buttonOptionsDict = Object.freeze({
     ]
   },
   createdAt: {
-    label: '创建时间',
+    label: 'Waktu penciptaan',
     icons: [
       {
         name: 'el-icon-sort',

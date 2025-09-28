@@ -114,23 +114,26 @@ const addPageControls = () => {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 8px 16px;
+  
+  /* --- PERBAIKAN UTAMA --- */
+  padding: 12px 16px; /* Beri padding vertikal dan horizontal */
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px; /* Sudut lebih tumpul untuk tampilan modern */
+  border: 1px solid #e7e9eb; /* Tambahkan border tipis */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Shadow lebih lembut */
   box-sizing: border-box;
 }
 
 .controls-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px; /* Jarak antar tombol di dalam grup */
 }
 
-// Di mobile, tombol aksi pindah ke kiri agar lebih hemat tempat
+/* Di mobile, tombol aksi pindah ke kiri agar lebih hemat tempat */
 @media (max-width: 768px) {
   .page-controls-strip {
-    flex-wrap: wrap; // Biarkan item turun jika tidak muat
+    flex-wrap: wrap; 
     gap: 12px;
     padding: 12px;
     justify-content: center;
@@ -143,7 +146,7 @@ const addPageControls = () => {
     flex-grow: 1;
     justify-content: center;
   }
-  // Sembunyikan tombol "Halaman Baru"
+  /* Sembunyikan tombol "Halaman Baru" di mobile untuk menghemat ruang */
   .left .el-button {
     display: none;
   }

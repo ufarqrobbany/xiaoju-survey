@@ -1,76 +1,73 @@
 <template>
-  <div class="preview-panel">
+  <div class="preview-wrapper">
     <div class="btn preview-btn" @click="dialogTableVisible = true">
-      <i-ep-view class="view-icon" :size="20" />
+      <i-ep-view class="view-icon" />
       <span class="btn-txt">Pratinjau</span>
     </div>
+
     <el-dialog
       :z-index="99999"
-      top="50px"
-      class="preview-config-wrapper"
+      top="0"
+      class="preview-dialog"
+      :class="dialogClass"
       :destroy-on-close="true"
       :show-close="false"
       @open="openDialog"
       @closed="closedDialog"
       v-model="dialogTableVisible"
-      :width="`${previewTab == 1 ? '398' : '1290'}`"
+      align-center
+      fullscreen
     >
-      <div class="ml75">
-        <div class="preview-tab">
-          <div
-            :class="`preview-tab-item ${previewTab == 1 ? 'active' : ''}`"
-            @click="previewTab = 1"
-          >
-            <i-ep-iphone />
-          </div>
-          <div
-            :class="`preview-tab-item ${previewTab == 2 ? 'active' : ''}`"
-            @click="previewTab = 2"
-          >
-            <i-ep-monitor />
-          </div>
-          <div
-            :class="`preview-tab-item ${previewTab == 3 ? 'active' : ''}`"
-            @click="previewTab = 3"
-          >
-            <i class="iconfont icon-icon_qianrushiwenjuan"></i>
-          </div>
+      <template #header="{ close }">
+        <div class="preview-header">
+          <el-radio-group v-model="previewTab" size="large">
+            <el-radio-button :label="1">
+              <el-icon><Iphone /></el-icon>
+              <span>Ponsel</span>
+            </el-radio-button>
+            <el-radio-button :label="2">
+              <el-icon><Monitor /></el-icon>
+              <span>PC</span>
+            </el-radio-button>
+            <el-radio-button :label="3">
+              <el-icon><FullScreen /></el-icon>
+              <span>SDK</span>
+            </el-radio-button>
+          </el-radio-group>
+          <el-button class="close-btn" :icon="Close" circle plain @click="close"></el-button>
         </div>
-        <div
-          :class="`preview-panel ${previewTab == 1 ? 'phone' : previewTab == 2 ? 'pc' : 'sdk'}`"
-        >
-          <div class="wrapper" v-if="previewTab !== 3 ">
-            <div class="tips-wrapper">
-              <i-ep-WarningFilled /> <span>Mode pratinjau pengguna, data tidak disimpan!</span>
-            </div>
-            <div class="iframe-wrapper" v-loading="loading" element-loading-text="加载中...">
-              <iframe
-                v-loading="loading"
-                id="iframe-preview"
-                :src="`/management/preview/${surveyId}`"
-                frameborder="0"
-                width="100%"
-                height="100%"
-              ></iframe>
-            </div>
-            
+      </template>
+
+      <div class="preview-content" v-loading="loading" element-loading-text="Memuat Pratinjau...">
+        <div v-if="previewTab !== 3" class="iframe-container">
+          <div class="tips-bar">
+            <i-ep-WarningFilled />
+            <span>Mode pratinjau, data tidak akan disimpan!</span>
           </div>
-          <div class="sdk-preview" v-else>
-            <div >
-              <el-image :src="sdkImages[sdkType]" fit="contain"/>
-            </div>
-            
-            <el-button class="sdk-preview-btn" type="primary" @click="changeSdkType" :icon="Switch">Ganti Mode Pratinjau</el-button>
-          </div>
+          <iframe
+            id="iframe-preview"
+            :src="`/management/preview/${surveyId}`"
+            frameborder="0"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+        <div v-else class="sdk-container">
+          <el-image :src="sdkImages[sdkType]" fit="contain" />
+          <el-button class="sdk-preview-btn" type="primary" @click="changeSdkType" :icon="Switch">
+            Ganti Mode Pratinjau
+          </el-button>
         </div>
       </div>
     </el-dialog>
   </div>
 </template>
+
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Switch } from '@element-plus/icons-vue'
+import { Iphone, Monitor, FullScreen, Close, Switch } from '@element-plus/icons-vue'
+
 const route = useRoute()
 
 const dialogTableVisible = ref(false)
@@ -78,180 +75,170 @@ const previewTab = ref(1)
 const surveyId = route.params.id
 const loading = ref(true)
 const sdkType = ref(0)
+
 const sdkImages = [
   '/imgs/sdk-1.png',
   '/imgs/sdk-2.png',
   '/imgs/sdk-3.png'
-  ]
+]
+
+const dialogClass = computed(() => {
+  switch (previewTab.value) {
+    case 1: return 'mode-phone'
+    case 2: return 'mode-pc'
+    case 3: return 'mode-sdk'
+    default: return ''
+  }
+})
+
 const changeSdkType = () => {
   sdkType.value = (sdkType.value + 1) % 3
 }
+
 const openDialog = () => {
-  const iframePreview = document.getElementById('iframe-preview')
-  if (!iframePreview) return
-  iframePreview.onload = function () {
+  // Tunggu iframe dirender
+  setTimeout(() => {
+    const iframePreview = document.getElementById('iframe-preview')
+    if (iframePreview) {
+      iframePreview.onload = () => {
+        loading.value = false
+      }
+    } else if (previewTab.value !== 3) {
+      // Jika iframe tidak ada tapi seharusnya ada, hentikan loading
+      loading.value = false
+    }
+  }, 100)
+
+  // Hentikan loading untuk SDK mode
+  if (previewTab.value === 3) {
     loading.value = false
   }
 }
 
 const closedDialog = () => {
-  loading.value = true
+  loading.value = true // Reset status loading saat dialog ditutup
 }
 </script>
+
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
 
-.preview-panel {
-  :deep(.preview-config-wrapper) {
-    background-color: transparent;
-    box-shadow: none;
+// Global styling untuk dialog
+.preview-dialog {
+  display: flex;
+  flex-direction: column;
+  background: #f0f2f5; // Latar belakang netral
+
+  :deep(.el-dialog__header) {
+    padding: 16px;
+    margin: 0;
+    border-bottom: 1px solid #e0e2e7;
+    background: #fff;
+  }
+
+  :deep(.el-dialog__body) {
     padding: 0;
-  }
-  .ml75 {
-    margin-left: 75px;
+    flex-grow: 1;
+    overflow: auto;
   }
 
-  .preview-tab {
+  .preview-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-
-    .border-right-none {
-      border-right: none;
-    }
-
-    .active {
-      border-color: $primary-color;
-      color: $primary-color;
-    }
-
-    .border-left-none {
-      border-left: none;
-    }
-
-    &-item {
-      width: 80px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffff;
-      border: 1px solid rgba(227, 228, 232, 1);
-      cursor: pointer;
-      &:hover {
-        border-color: $primary-color;
-        color: $primary-color;
-      }
-    }
-  }
-  .preview-panel {
-    margin-top: 16px;
-    &.pc {
-      display: flex;
-      justify-content: center;
-      box-shadow: 0px 2px 10px -2px rgba(82, 82, 102, 0.2);
-      height: 726px;
-      background: var(--primary-background);
-      .wrapper {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .tips-wrapper {
-          justify-content: center;
-        }
-
-        .iframe-wrapper {
-          width: 636px;
-          flex: 1;
-          margin-top: 20px;
-          border-radius: 8px 8px 0 0;
-          overflow: hidden;
-        }
-      }
-    }
-    &.phone {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .wrapper {
-        background: url('/imgs/preview-phone.png') no-repeat;
-        width: 328px;
-        height: 678px;
-        background-size: 100% 100%;
-        padding: 0 14px;
-        padding-top: 58px;
-        padding-bottom: 14px;
-        display: flex;
-        flex-direction: column;
-        .iframe-wrapper {
-          height: 100%;
-        }
-      }
-      iframe {
-        border-radius: 0px 0px 20px 20px;
-      }
-    }
-    &.sdk { 
-      display: flex;
-      justify-content: center;
-      box-shadow: 0px 2px 10px -2px rgba(82, 82, 102, 0.2);
-      height: 726px;
-      background: #F6F7F9;
-      .wrapper {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .tips-wrapper {
-          justify-content: center;
-        }
-
-        .iframe-wrapper {
-          width: 636px;
-          flex: 1;
-          margin-top: 20px;
-          border-radius: 8px 8px 0 0;
-          overflow: hidden;
-        }
-      }
-    }
-  }
-  .tips-wrapper {
-    display: flex;
     width: 100%;
-    align-items: center;
-    background: $primary-bg-color;
-    color: $primary-color;
-    font-size: 12px;
-    padding: 2px 0;
-    padding-left: 9px;
-
-    span {
-      margin-left: 5px;
-    }
   }
-  .sdk-preview{
+
+  .close-btn {
+    margin-left: 20px;
+  }
+
+  .preview-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+}
+
+// Styling spesifik per mode
+.preview-dialog.mode-phone {
+  .iframe-container {
+    width: 375px;
+    height: 812px;
+    background: url('/imgs/preview-phone.png') no-repeat center center;
+    background-size: contain;
+    padding: 66px 18px 24px 18px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    .el-image{
+    
+    iframe {
+      border-radius: 0 0 30px 30px;
+    }
+  }
+}
+
+.preview-dialog.mode-pc {
+  .iframe-container {
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.tips-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $primary-bg-color;
+  color: $primary-color;
+  font-size: 13px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+
+.iframe-container {
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+.sdk-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  .el-image {
+    max-width: 80%;
+    max-height: 70vh;
+  }
+}
+
+// Responsivitas untuk header
+@media (max-width: 600px) {
+  .preview-header {
+    .el-radio-button__inner {
+      span {
+        display: none; // Sembunyikan teks di mobile, hanya ikon
+      }
+    }
+  }
+  .preview-dialog.mode-phone .iframe-container {
       width: 100%;
-      height: 100%;
-    }
-    .el-button{
-      position: absolute;
-      right: 6px;
-      bottom: 24px;
-    }
+      height: 90%;
+      padding: 12% 4% 4% 4%;
   }
 }
 </style>

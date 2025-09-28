@@ -1,20 +1,14 @@
 <template>
   <div class="content-page-wrapper">
+    <aside :class="['side-panel', 'left-panel', { 'is-visible': uiStore.isCatalogVisible }]">
+      <CatalogPanel />
+    </aside>
+
     <main class="center-content">
       <PreviewPanel />
     </main>
 
-    <div 
-      v-if="isPanelOpen && isMobile"
-      class="backdrop" 
-      @click="uiStore.closeAllPanels"
-    ></div>
-
-    <aside :class="['side-panel left-panel', { 'is-visible': uiStore.isCatalogVisible }]">
-      <CatalogPanel />
-    </aside>
-
-    <aside :class="['side-panel right-panel', { 'is-visible': uiStore.isSetterVisible }]">
+    <aside :class="['side-panel', 'right-panel', { 'is-visible': uiStore.isSetterVisible }]">
       <SetterPanel />
     </aside>
   </div>
@@ -29,109 +23,59 @@ import PreviewPanel from '../../modules/skinModule/PreviewPanel.vue'
 import SetterPanel from '../../modules/skinModule/SetterPanel.vue'
 
 const uiStore = useUiStore()
-// Buat state reaktif dari store
+// State dari Pinia store akan mengontrol class 'is-visible'
 const { isCatalogVisible, isSetterVisible } = storeToRefs(uiStore)
-
-// Helper untuk mengetahui apakah ada panel yang terbuka
-const isPanelOpen = computed(() => isCatalogVisible.value || isSetterVisible.value)
-
-// Mengetahui ukuran layar (opsional, bisa dengan CSS saja)
-const isMobile = computed(() => window.innerWidth < 768)
 </script>
 
 <style lang="scss" scoped>
 .content-page-wrapper {
-  position: relative;
+  display: flex;
+  /* KUNCI UTAMA: Pusatkan semua item di dalamnya secara horizontal */
+  justify-content: center; 
+  align-items: flex-start;
   height: 100%;
   width: 100%;
+  padding: 24px;
+  /* Beri jarak antar panel saat muncul bersamaan */
+  gap: 24px; 
   overflow: hidden;
-  background-color: #f7f9fc; // Latar belakang untuk area konten
-}
-
-// --- 1. Base Styles (Mobile First) ---
-.side-panel {
-  position: fixed; // Gunakan fixed agar tidak terpengaruh scroll body
-  top: 64px; // Beri ruang untuk toolbar
-  bottom: 0;
-  width: 360px;
-  max-width: 85vw; // Jangan terlalu lebar di mobile
-  background-color: #ffffff;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 999;
-  border: none;
-
-  &.left-panel {
-    left: 0;
-    transform: translateX(-100%);
-  }
-
-  &.right-panel {
-    right: 0;
-    transform: translateX(100%);
-  }
-
-  &.is-visible {
-    transform: translateX(0);
-  }
+  box-sizing: border-box;
+  /* Transisi untuk semua perubahan layout di dalam wrapper */
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .center-content {
+  /* Biarkan konten tengah mengisi ruang sisa & bisa menyusut */
+  flex: 1 1 auto;
+  min-width: 0; /* Wajib untuk flexbox agar tidak overflow */
   height: 100%;
-  width: 100%;
-  overflow-y: auto; // Biarkan konten utama bisa di-scroll
+  display: flex;
+  justify-content: center; /* Memastikan isi dari PreviewPanel tetap di tengah */
 }
 
-.backdrop {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  width: 100%;
-  height: calc(100% - 64px);
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 998;
-}
+.side-panel {
+  width: 360px; /* Lebar standar panel */
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  
+  /* PERBAIKAN: Sembunyikan panel dengan mengubah lebarnya */
+  flex-shrink: 0; /* Jangan biarkan panel ini menyusut */
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: 0;
 
-// --- 2. Desktop Styles (Layar Besar > 1200px) ---
-@media (min-width: 1200px) {
-  .content-page-wrapper {
-    display: flex;
-  }
+  /* Transisi untuk animasi muncul/hilang yang mulus */
+  transition: width 0.35s ease, opacity 0.2s ease, padding 0.35s ease, border 0.35s ease;
 
-  .side-panel {
-    // Override gaya mobile: Kembalikan panel ke flow dokumen
-    position: relative; // Bukan 'fixed' lagi
-    top: auto;
-    bottom: auto;
-    flex-shrink: 0;
-    box-shadow: none; // Hilangkan shadow karena sudah menyatu
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); // Animasikan lebar
-    transform: none !important; // Hapus transform
-    width: 0; // Sembunyi dengan lebar 0
-    overflow: hidden; // Sembunyikan konten saat lebar 0
-
-    &.left-panel {
-      border-right: 1px solid #e8e8e8;
-    }
-    
-    &.right-panel {
-      order: 3; // Pindahkan ke paling kanan dalam flexbox
-      border-left: 1px solid #e8e8e8;
-    }
-
-    &.is-visible {
-      width: 360px; // Tampilkan dengan lebar sebenarnya
-    }
-  }
-
-  .center-content {
-    flex-grow: 1;
-    // Padding tidak lagi diperlukan karena ada panel fisik
-  }
-
-  // Backdrop tidak diperlukan di desktop
-  .backdrop {
-    display: none;
+  /* Saat panel aktif (class .is-visible ditambahkan) */
+  &.is-visible {
+    width: 360px;
+    opacity: 1;
+    border: 1px solid #e8e8e8;
   }
 }
 </style>

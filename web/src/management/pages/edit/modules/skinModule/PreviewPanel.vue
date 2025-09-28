@@ -40,26 +40,20 @@ import communalLoader from '@materials/communals/communalLoader.js'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 
-// Komponen dinamis
 const HeaderContent = communalLoader.loadComponent('HeaderContent')
 const MainTitle = communalLoader.loadComponent('MainTitle')
 const SubmitButton = communalLoader.loadComponent('SubmitButton')
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
 
-// --- Logika Setup yang Lebih Bersih ---
 const editStore = useEditStore()
 
-// Menggunakan storeToRefs untuk menjaga reaktivitas
-const { 
-  schema, 
-  pageQuestionData, 
-  currentEditOne, 
-  isFinallyPage, 
-  pageEditOne 
+const {
+  schema,
+  pageQuestionData,
+  currentEditOne,
+  isFinallyPage,
+  pageEditOne
 } = storeToRefs(editStore)
-
-// Tidak perlu lagi `toRefs` yang terpisah karena `schema` dari store sudah reaktif.
-// Cukup akses properti langsung di template: schema.bannerConf, dll.
 </script>
 
 <style lang="scss" scoped>
@@ -70,42 +64,63 @@ const {
   flex-direction: column;
   align-items: center;
   background: var(--primary-background);
-  // Tambahkan padding untuk memberi nafas di layar kecil
-  padding: 16px; 
+  padding: 24px;
   box-sizing: border-box;
 }
 
 .pagination-wrapper {
   position: relative;
-  top: 0; // Hapus `top` agar mengikuti flow
   width: 100%;
-  max-width: 600px; // Batasi lebar maksimum pagination
-  margin-bottom: 20px;
+  max-width: 700px;
+  margin-bottom: 24px;
   flex-shrink: 0;
 }
 
 .operation-wrapper {
   width: 100%;
-  flex-grow: 1; // Biarkan wrapper ini mengisi sisa ruang
-  overflow-y: auto; // Hanya scroll vertikal yang diizinkan
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  flex-grow: 1;
   
+  /* --- PERBAIKAN UTAMA (1/3) --- */
+  /* Biarkan scrollbar muncul secara otomatis saat konten meluap */
+  overflow-y: auto;
+  /* Properti ini mencegah flex item meluap dari containernya saat kontennya terlalu besar */
+  min-height: 0;
+
+  /* Styling untuk scrollbar agar lebih modern (opsional) */
   &::-webkit-scrollbar {
-    display: none;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
   }
 
   .box {
     position: relative;
-    // --- Perbaikan Kunci ---
-    width: 100%; // Selalu isi kontainer
-    max-width: 450px; // Tapi jangan lebih lebar dari ini
-    margin: 0 auto; // Selalu pusatkan box
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
     background: #fff;
-    // Tambahkan shadow untuk efek 'page'
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-    overflow: hidden; // Pastikan konten di dalam tidak keluar dari border-radius
+
+    /* --- PERBAIKAN UTAMA (2/3) --- */
+    /* Ubah border-radius sesuai permintaan */
+    border-radius: 10px;
+    
+    /* overflow: hidden; Dihapus agar shadow dari elemen di dalam (jika ada) bisa terlihat */
   }
+}
+
+.content {
+  /* --- PERBAIKAN UTAMA (3/3) --- */
+  /* Tambahkan padding-bottom agar ada ruang napas di akhir scroll */
+  padding: 24px 32px 48px 32px;
 }
 </style>
