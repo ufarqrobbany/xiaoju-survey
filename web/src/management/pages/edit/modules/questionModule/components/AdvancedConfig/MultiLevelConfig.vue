@@ -1,14 +1,14 @@
 <template>
   <div>
-    <span class="primary-color" @click="openMultiLevelConfig"> 选项编辑 > </span>
-    <el-dialog title="多级联动编辑" class="multiLevel-config-wrapper" v-model="configVisible" :append-to-body="true"
+    <span class="primary-color" @click="openMultiLevelConfig"> Pilihan Sunting > </span>
+    <el-dialog title="Pengaturan Multi-Level" class="multiLevel-config-wrapper" v-model="configVisible" :append-to-body="true"
       width="706px">
       <div class="placeholder-wrapper">
         <div class="placeholder-wrapper-item" v-for="(item, i) in multilevelData.placeholder" :key="item.hash">
           <div class="placeholder-wrapper-list">
             <div class="placeholder-disable-edit multiLevel-input" @click="showPlaceholderEdit(item.hash)"
               v-if="editMap[item.hash]">{{ item.text }}</div>
-            <el-input placeholder="请输入内容" :id="`input-${item.hash}`" @blur="editMap[item.hash] = true"
+            <el-input placeholder="Silakan masukkan konten" :id="`input-${item.hash}`" @blur="editMap[item.hash] = true"
               v-model="item.text" v-else class="multiLevel-input" />
           </div>
           <i-ep-ArrowRight v-if="multilevelData.placeholder.length - 1 > i" style="font-size: 16px;margin:0px 4px;" />
@@ -56,14 +56,14 @@
         <template v-for="(item, key) in multilevelVal" :key="key">
           <div v-if="key == 0 || (multilevelVal[key - 1])" @click="addMultilevelNode(key)" class="add-node-item">
             <i-ep-Plus />
-            添加选项
+            Tambah Pilihan
           </div>
         </template>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="configVisible = false">取消</el-button>
-          <el-button type="primary" @click="multilevelConfigChange">确认</el-button>
+          <el-button @click="configVisible = false">Batal</el-button>
+          <el-button type="primary" @click="multilevelConfigChange">Konfirmasi</el-button>
         </span>
       </template>
     </el-dialog>

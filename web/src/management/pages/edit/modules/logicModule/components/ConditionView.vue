@@ -4,31 +4,31 @@
     :class="{ 'is-last': isLastCondition }"
     :data-content-before="!isLastCondition ? '且' : ''"
   >
-    <span class="desc">如果</span>
+    <span class="desc">Jika</span>
     <el-form-item
       :prop="`conditions[${index}].field`"
-      :rules="[{ required: true, message: '请选择题目', trigger: 'change' }]"
+      :rules="[{ required: true, message: 'Pilih pertanyaan', trigger: 'change' }]"
     >
       <el-select
         class="select field-select"
         v-model="conditionField"
-        placeholder="请选择题目"
+        placeholder="Pilih pertanyaan"
         @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
         <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
         </el-option>
-        <template #empty> 无数据 </template>
+        <template #empty> Tidak ada data </template>
       </el-select>
     </el-form-item>
-    <span class="desc">选择了</span>
+    <span class="desc">terpilih</span>
     <el-form-item
       class="select value-select"
       :prop="`conditions[${index}].value`"
-      :rules="[{ required: true, message: '请选择选项', trigger: 'change' }]"
+      :rules="[{ required: true, message: 'Pilih opsi', trigger: 'change' }]"
     >
       <el-select
         v-model="conditionValue"
-        placeholder="请选择选项"
+        placeholder="Pilih opsi"
         multiple
         @change="(val: any) => handleChange(conditionNode, 'value', val)"
       >
@@ -38,10 +38,10 @@
           :label="label"
           :value="value"
         ></el-option>
-        <template #empty> 无数据 </template>
+        <template #empty> Tidak ada data </template>
       </el-select>
     </el-form-item>
-    <span class="desc">中的任一选项 </span>
+    <span class="desc">pilih apapun di </span>
     <span class="opt">
       <i-ep-plus class="opt-icon opt-icon-plus" @click="handleAdd" />
       <i-ep-minus
@@ -125,7 +125,7 @@ const handleChange = (conditionNode: ConditionNode, key: string, value: any) => 
   switch (key) {
     case 'field':
       conditionNode.setField(value)
-      // 前置题改变清空选项
+      // Prasyarat mengubah opsi yang jelas
       conditionNode.setValue([])
       break
     case 'operator':

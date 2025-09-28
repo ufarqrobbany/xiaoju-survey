@@ -28,21 +28,21 @@
 const routes = [
   {
     icon: 'icon-wenjuanbianji',
-    text: '问卷编辑',
+    text: 'Sunting',
     router: 'QuestionEditIndex',
     key: 'edit',
     next: true
   },
   {
     icon: 'icon-wenjuanshezhi',
-    text: '问卷设置',
+    text: 'Pengaturan Kuesioner',
     router: 'QuestionEditSetting',
     key: 'settings',
     next: true
   },
   {
     icon: 'icon-yangshishezhi',
-    text: '皮肤设置',
+    text: 'Pengaturan Kulit',
     router: 'QuestionSkinSetting',
     key: 'skinsettings',
     next: true

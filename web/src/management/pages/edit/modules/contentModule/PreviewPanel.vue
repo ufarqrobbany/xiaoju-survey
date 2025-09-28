@@ -2,7 +2,7 @@
   <div class="preview-panel">
     <div class="btn preview-btn" @click="dialogTableVisible = true">
       <i-ep-view class="view-icon" :size="20" />
-      <span class="btn-txt">预览</span>
+      <span class="btn-txt">Pratinjau</span>
     </div>
     <el-dialog
       :z-index="99999"
@@ -41,7 +41,7 @@
         >
           <div class="wrapper" v-if="previewTab !== 3 ">
             <div class="tips-wrapper">
-              <i-ep-WarningFilled /> <span>用户预览模式，数据不保存！</span>
+              <i-ep-WarningFilled /> <span>Mode pratinjau pengguna, data tidak disimpan!</span>
             </div>
             <div class="iframe-wrapper" v-loading="loading" element-loading-text="加载中...">
               <iframe
@@ -60,7 +60,7 @@
               <el-image :src="sdkImages[sdkType]" fit="contain"/>
             </div>
             
-            <el-button class="sdk-preview-btn" type="primary" @click="changeSdkType" :icon="Switch">切换预览模式</el-button>
+            <el-button class="sdk-preview-btn" type="primary" @click="changeSdkType" :icon="Switch">Ganti Mode Pratinjau</el-button>
           </div>
         </div>
       </div>

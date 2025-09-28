@@ -4,26 +4,25 @@
       <PageWrapper :readonly="true" />
     </div>
     <div class="operation-wrapper">
-      <div class="box" ref="box">
-        <div class="mask"></div>
-        <HeaderContent v-if="pageEditOne == 1" :bannerConf="bannerConf" :readonly="false" />
+      <div class="box">
+        <HeaderContent v-if="pageEditOne === 1" :banner-conf="schema.bannerConf" :readonly="false" />
         <div class="content">
           <MainTitle
-            v-if="pageEditOne == 1"
-            :isSelected="false"
-            :bannerConf="bannerConf"
+            v-if="pageEditOne === 1"
+            :is-selected="false"
+            :banner-conf="schema.bannerConf"
             :readonly="false"
           />
-          <MaterialGroup :questionDataList="pageQuestionData" ref="MaterialGroup" />
+          <MaterialGroup :question-data-list="pageQuestionData" />
           <SubmitButton
-            :submit-conf="submitConf"
-            :skin-conf="skinConf"
+            :submit-conf="schema.submitConf"
+            :skin-conf="schema.skinConf"
             :readonly="false"
             :is-selected="currentEditOne === 'submit'"
             :is-finally-page="isFinallyPage"
           />
           <LogoIcon
-            :logo-conf="bottomConf"
+            :logo-conf="schema.bottomConf"
             :readonly="false"
             :is-selected="currentEditOne === 'logo'"
           />
@@ -32,106 +31,81 @@
     </div>
   </div>
 </template>
-<script>
-import { defineComponent, toRefs } from 'vue'
-import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
+
+<script setup>
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import communalLoader from '@materials/communals/communalLoader.js'
 
-const HeaderContent = () => communalLoader.loadComponent('HeaderContent')
-const MainTitle = () => communalLoader.loadComponent('MainTitle')
-const SubmitButton = () => communalLoader.loadComponent('SubmitButton')
-const LogoIcon = () => communalLoader.loadComponent('LogoIcon')
+import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
+import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 
-export default defineComponent({
-  components: {
-    MaterialGroup,
-    PageWrapper,
-    HeaderContent: HeaderContent(),
-    MainTitle: MainTitle(),
-    SubmitButton: SubmitButton(),
-    LogoIcon: LogoIcon()
-  },
-  setup() {
-    const editStore = useEditStore()
-    const { pageQuestionData, currentEditOne, currentEditKey, isFinallyPage, pageEditOne } =
-      storeToRefs(editStore)
-    const { schema } = editStore
-    const { bannerConf, submitConf, skinConf, bottomConf } = toRefs(schema)
+// Komponen dinamis
+const HeaderContent = communalLoader.loadComponent('HeaderContent')
+const MainTitle = communalLoader.loadComponent('MainTitle')
+const SubmitButton = communalLoader.loadComponent('SubmitButton')
+const LogoIcon = communalLoader.loadComponent('LogoIcon')
 
-    return {
-      bannerConf,
-      submitConf,
-      bottomConf,
-      skinConf,
-      pageQuestionData,
-      currentEditOne,
-      currentEditKey,
-      isFinallyPage,
-      pageEditOne
-    }
-  }
-})
+// --- Logika Setup yang Lebih Bersih ---
+const editStore = useEditStore()
+
+// Menggunakan storeToRefs untuk menjaga reaktivitas
+const { 
+  schema, 
+  pageQuestionData, 
+  currentEditOne, 
+  isFinallyPage, 
+  pageEditOne 
+} = storeToRefs(editStore)
+
+// Tidak perlu lagi `toRefs` yang terpisah karena `schema` dari store sudah reaktif.
+// Cukup akses properti langsung di template: schema.bannerConf, dll.
 </script>
 
 <style lang="scss" scoped>
 .main-operation {
   width: 100%;
   height: 100%;
-  min-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
   background: var(--primary-background);
+  // Tambahkan padding untuk memberi nafas di layar kecil
+  padding: 16px; 
+  box-sizing: border-box;
 }
 
 .pagination-wrapper {
   position: relative;
-  top: 50px;
-  width: 90%;
-}
-
-.toolbar {
+  top: 0; // Hapus `top` agar mengikuti flow
   width: 100%;
-  height: 38px;
-  background-color: #fff;
-  flex-grow: 0;
+  max-width: 600px; // Batasi lebar maksimum pagination
+  margin-bottom: 20px;
   flex-shrink: 0;
 }
 
 .operation-wrapper {
-  margin-top: 50px;
-  margin-bottom: 45px;
-  // min-height: 812px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  // padding-right: 30px;
-  margin-right: 0px;
-  scrollbar-width: none;
-  width: 90%;
+  width: 100%;
+  flex-grow: 1; // Biarkan wrapper ini mengisi sisa ruang
+  overflow-y: auto; // Hanya scroll vertikal yang diizinkan
   -ms-overflow-style: none;
-
+  scrollbar-width: none;
+  
   &::-webkit-scrollbar {
     display: none;
   }
 
   .box {
     position: relative;
-
-    .mask {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 999;
-    }
-
-    .content {
-      background: rgba(255, 255, 255, var(--opacity));
-    }
+    // --- Perbaikan Kunci ---
+    width: 100%; // Selalu isi kontainer
+    max-width: 450px; // Tapi jangan lebih lebar dari ini
+    margin: 0 auto; // Selalu pusatkan box
+    background: #fff;
+    // Tambahkan shadow untuk efek 'page'
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden; // Pastikan konten di dalam tidak keluar dari border-radius
   }
 }
 </style>

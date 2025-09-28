@@ -1,11 +1,11 @@
 export default {
   Success: [
     {
-      label: '提示文案',
+      label: 'Salinan cepat',
       type: 'RichText',
       key: 'msgContent.msg_200',
-      placeholder: '提交成功',
-      value: '提交成功',
+      placeholder: 'Berhasil dikirim',
+      value: 'Berhasil dikirim',
       labelStyle: {
         'font-weight': 'bold'
       }
@@ -13,11 +13,11 @@ export default {
   ],
   OverTime: [
     {
-      label: '提示文案',
+      label: 'Salinan cepat',
       type: 'RichText',
       key: 'msgContent.msg_9001',
-      placeholder: '问卷已过期',
-      value: '问卷已过期',
+      placeholder: 'Kuesioner telah kedaluwarsa',
+      value: 'Kuesioner telah kedaluwarsa',
       labelStyle: {
         'font-weight': 'bold'
       }

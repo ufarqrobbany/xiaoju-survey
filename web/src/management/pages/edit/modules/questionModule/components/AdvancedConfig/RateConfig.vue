@@ -1,9 +1,9 @@
 <template>
   <div>
-    <span class="primary-color" @click="openOptionConfig"> 评分高级设置 > </span>
+    <span class="primary-color" @click="openOptionConfig"> Memberi peringkat pada pengaturan lanjutan > </span>
 
     <el-dialog
-      title="评分高级设置"
+      title="Memberi peringkat pada pengaturan lanjutan"
       custom-class="option-config-wrapper"
       v-model="configVisible"
       :append-to-body="true"
@@ -11,16 +11,16 @@
     >
       <div class="head">
         <div class="row">
-          <div class="score">评分数值</div>
-          <div class="explain" v-if="isStar">评分释义</div>
-          <div class="other">评分后增添输入框</div>
+          <div class="score">Nilai Peringkat</div>
+          <div class="explain" v-if="isStar">Penjelasan Peringkat</div>
+          <div class="other">Tambahkan kotak input setelah peringkat</div>
         </div>
       </div>
       <div class="body">
         <div class="row" v-for="item in range" :key="item.index">
           <div class="score">{{ item.index }}</div>
           <div class="explain" v-if="isStar">
-            <el-input class="text" v-model="item.explain" maxlength="200" placeholder="最多200字" />
+            <el-input class="text" v-model="item.explain" maxlength="200" placeholder="hingga 200 kata" />
           </div>
           <div class="other">
             <el-switch class="is-show" v-model="item.isShowInput"></el-switch>
@@ -28,18 +28,18 @@
               class="text"
               v-show="item.isShowInput"
               v-model="item.text"
-              placeholder="提示文案"
+              placeholder="Teks petunjuk"
             />
             <el-checkbox class="required" v-show="item.isShowInput" v-model="item.required"
-              >必填</el-checkbox
+              >Wajib diisi</el-checkbox
             >
           </div>
         </div>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="configVisible = false">取消</el-button>
-          <el-button type="primary" @click="onConfirm">确认</el-button>
+          <el-button @click="configVisible = false">Batal</el-button>
+          <el-button type="primary" @click="onConfirm">Konfirmasi</el-button>
         </span>
       </template>
     </el-dialog>

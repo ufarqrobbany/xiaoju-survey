@@ -3,12 +3,12 @@ import logoConfig from './logoConfig'
 
 export default [
   {
-    name: '头图',
+    name: 'Gambar Header',
     key: 'bannerConf.bannerConfig',
     formConfigList: bannerConfig
   },
   {
-    name: '背景',
+    name: 'Latar Belakang',
     key: 'skinConf.backgroundConf',
     formConfigList: [
       {
@@ -16,17 +16,17 @@ export default [
         key: 'type',
         options: [
           {
-            label: '图片(<5M)',
+            label: 'Gambar (<5M)',
             value: 'image'
           },
           {
-            label: '颜色',
+            label: 'Warna',
             value: 'color'
           }
         ]
       },
       {
-        label: '背景图片',
+        label: 'Gambar Latar Belakang',
         type: 'UploadSingleFile',
         accept: 'image/*',
         limitSize: 5, // 单位MB
@@ -36,7 +36,7 @@ export default [
         }
       },
       {
-        label: '背景颜色',
+        label: 'Warna Latar Belakang',
         type: 'ColorPicker',
         key: 'color',
         relyFunc: (data) => {
@@ -46,11 +46,11 @@ export default [
     ]
   },
   {
-    name: '主题色',
+    name: 'Warna Tema',
     key: 'skinConf.themeConf',
     formConfigList: [
       {
-        label: '全局应用',
+        label: 'Aplikasi Global',
         type: 'ColorPicker',
         key: 'color'
       }
@@ -58,17 +58,17 @@ export default [
   },
   {
     key: 'skinConf.contentConf',
-    name: '内容区域',
+    name: 'Konten',
     formConfigList: [
       {
-        label: '内容透明度',
+        label: 'Keterlihatan Konten',
         type: 'SliderSetter',
         key: 'opacity'
       }
     ]
   },
   {
-    name: '品牌logo',
+    name: 'Logo Merek',
     key: 'bottomConf',
     formConfigList: logoConfig
   }

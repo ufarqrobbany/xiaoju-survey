@@ -1,14 +1,14 @@
 <template>
   <div>
-    <span class="primary-color" @click="openCascaderConfig"> 选项编辑 > </span>
-    <el-dialog title="多级联动编辑" class="cascader-config-wrapper" v-model="configVisible" :append-to-body="true"
+    <span class="primary-color" @click="openCascaderConfig"> Pilihan Sunting > </span>
+    <el-dialog title="Pengaturan Multi-Level" class="cascader-config-wrapper" v-model="configVisible" :append-to-body="true"
       width="706px">
       <div class="placeholder-wrapper">
         <div class="placeholder-wrapper-item" v-for="(item, i) in cascaderData.placeholder" :key="item.hash">
           <div class="placeholder-wrapper-list">
             <div class="placeholder-disable-edit cascader-input" @click="showPlaceholderEdit(item.hash)"
               v-if="editMap[item.hash]">{{ item.text }}</div>
-            <el-input placeholder="请输入内容" :id="`input-${item.hash}`" @blur="editMap[item.hash] = true"
+            <el-input placeholder="Silakan masukkan konten" :id="`input-${item.hash}`" @blur="editMap[item.hash] = true"
               v-model="item.text" v-else class="cascader-input" />
           </div>
           <i-ep-ArrowRight v-if="cascaderData.placeholder.length - 1 > i" style="font-size: 16px;margin:0px 4px;" />

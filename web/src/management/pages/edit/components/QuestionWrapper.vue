@@ -142,23 +142,23 @@ const onMoveDown = () => {
 }
 const onDelete = async () => {
   if (unref(hasShowLogic) || getShowLogicText.value) {
-    ElMessageBox.alert('该题目被显示逻辑关联，请先清除逻辑依赖', '提示', {
-      confirmButtonText: '确定',
+    ElMessageBox.alert('Pertanyaan ini terhubung dengan logika tampil, silakan hapus logika terlebih dahulu.', 'Peringatan', {
+      confirmButtonText: 'OK',
       type: 'warning'
     })
     return
   }
   if (unref(hasJumpLogic)) {
-    ElMessageBox.alert('该题目被跳转逻辑关联，请先清除逻辑依赖', '提示', {
-      confirmButtonText: '确定',
+    ElMessageBox.alert('Pertanyaan ini terhubung dengan logika lompat, silakan hapus logika terlebih dahulu.', 'Peringatan', {
+      confirmButtonText: 'OK',
       type: 'warning'
     })
     return
   }
   try {
-    await ElMessageBox.confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm('Tindakan ini akan mempengaruhi statistik data. Apakah Anda yakin ingin menghapus?', 'Peringatan', {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Batal',
       type: 'warning'
     })
 
@@ -170,7 +170,7 @@ const onDelete = async () => {
     emit('changeSeq', { type: 'delete', index })
     isHover.value = false
   } catch (error) {
-    console.log('取消删除')
+    console.log('Batal menghapus')
   }
 }
 

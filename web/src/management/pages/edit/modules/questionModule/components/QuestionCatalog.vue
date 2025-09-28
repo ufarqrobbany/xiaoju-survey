@@ -1,7 +1,7 @@
 <template>
   <div class="question-catalog-wrapper">
     <el-collapse>
-      <el-collapse-item v-for="(v, i) in renderData" :key="v" :title="`第${i + 1}页`" :name="i + 1">
+      <el-collapse-item v-for="(v, i) in renderData" :key="v" :title="`Halaman ke-${i + 1}`" :name="i + 1">
         <draggable
           v-model="renderData[i]"
           itemKey="field"
@@ -77,7 +77,7 @@ watch(
 </script>
 <style lang="scss" scoped>
 .question-catalog-wrapper {
-  padding-bottom: 400px; // 考试题有个上拉框会盖住，改成和题型一致的
+  padding-bottom: 400px; // Pertanyaan ujian memiliki kotak tarik yang akan menutupinya, ubahlah menjadi sama dengan jenis pertanyaannya
 
   .catelog-first-page {
     font-size: 12px;

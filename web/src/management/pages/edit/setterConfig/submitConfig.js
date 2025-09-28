@@ -1,61 +1,61 @@
 export default [
   {
-    title: '提交按钮文案',
+    title: 'Teks tombol kirim',
     type: 'InputSetter',
     key: 'submitTitle',
-    placeholder: '提交',
+    placeholder: 'Kirim',
     value: ''
   },
   {
-    title: '提交确认弹窗',
+    title: 'Konfirmasi pengiriman',
     type: 'Customed',
     key: 'confirmAgain',
     content: [
       {
-        label: '是否配置该项',
+        label: 'Apakah ingin mengonfigurasi item ini',
         labelStyle: { width: '120px' },
         type: 'CustomedSwitch',
         key: 'confirmAgain.is_again',
         value: true
       },
       {
-        label: '二次确认文案',
+        label: 'Teks konfirmasi kedua',
         labelStyle: { width: '120px' },
         type: 'InputSetter',
         key: 'confirmAgain.again_text',
-        placeholder: '确认要提交吗？',
-        value: '确认要提交吗？'
+        placeholder: 'Apakah Anda yakin ingin mengirim?',
+        value: 'Apakah Anda yakin ingin mengirim?'
       }
     ]
   },
   {
-    title: '提交文案配置',
+    title: 'Konfigurasi salinan pengiriman',
     type: 'Customed',
     key: 'msgContent',
     content: [
       {
-        label: '已提交',
+        label: 'Dikirimkan',
         labelStyle: { width: '120px' },
         type: 'InputSetter',
         key: 'msgContent.msg_9002',
-        placeholder: '请勿多次提交！',
-        value: '请勿多次提交！'
+        placeholder: 'Silakan jangan mengirim beberapa kali!',
+        value: 'Silakan jangan mengirim beberapa kali!'
       },
       {
-        label: '提交结束',
+        label: 'Pengiriman selesai',
         labelStyle: { width: '120px' },
         type: 'InputSetter',
         key: 'msgContent.msg_9003',
-        placeholder: '您来晚了，已经满额！',
-        value: '您来晚了，已经满额！'
+        placeholder: 'Anda datang terlambat, sudah penuh!',
+        value: 'Anda datang terlambat, sudah penuh!'
       },
       {
-        label: '其他提交失败',
+        label: 'Pengiriman gagal lainnya',
         labelStyle: { width: '120px' },
         type: 'InputSetter',
         key: 'msgContent.msg_9004',
-        placeholder: '提交失败！',
-        value: '提交失败！'
+        placeholder: 'Pengiriman gagal!',
+        value: 'Pengiriman gagal!'
       }
     ]
   }

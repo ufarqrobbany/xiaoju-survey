@@ -1,7 +1,7 @@
 <template>
   <div class="btn" @click="handleSave" v-loading="isSaving">
     <i class="iconfont icon-baocun"></i>
-    <span class="btn-txt">保存</span>
+    <span class="btn-txt">Simpan</span>
     <transition name="fade">
       <div class="auto-save-wrapper" v-if="isShowAutoSave">
         <span class="sv-text">
@@ -38,9 +38,9 @@ const autoSaveStatus = ref<'succeed' | 'saving' | 'failed'>('succeed')
 const saveText = computed(
   () =>
     ({
-      saving: '保存中',
-      succeed: '保存成功',
-      failed: '保存失败'
+      saving: 'Menyimpan...',
+      succeed: 'Berhasil disimpan',
+      failed: 'Gagal menyimpan'
     })[autoSaveStatus.value]
 )
 
@@ -71,12 +71,12 @@ const validate = () => {
 const onSave = async () => {
   const saveData = buildData(schema.value, sessionId.value)
   if (!saveData.sessionId) {
-    ElMessage.error('sessionId有误')
+    ElMessage.error('sessionId tidak ditemukan, silakan segarkan halaman')
     return null
   }
 
   if (!saveData.surveyId) {
-    ElMessage.error('未获取到问卷id')
+    ElMessage.error('surveyId tidak ditemukan, silakan segarkan halaman')
     return null
   }
 
@@ -134,8 +134,8 @@ const handleSave = async () => {
 }
 
 /**
- * 保存问卷
- * @return 无返回时说明保存失败并由函数内部完成统一提示，有返回时，code为200为保存成功，不为200时，使用errmsg由外部实现错误信息展示
+ * Simpan survei
+ * @return Jika tidak ada return berarti gagal dan sudah ada notifikasi, jika return code 200 berarti berhasil, selain itu gunakan errmsg untuk notifikasi error
  */
 const doSave = async () => {
   if (isSaving.value) {
@@ -161,8 +161,8 @@ const doSave = async () => {
     if (res.code === 200) {
       return res
     } else if (res.code === 3006) {
-      ElMessageBox.alert(res.errmsg, '提示', {
-        confirmButtonText: '刷新同步',
+      ElMessageBox.alert(res.errmsg, 'Info', {
+        confirmButtonText: 'Sinkronkan Ulang',
         callback: (action: string) => {
           if (action === 'confirm') {
             props.seize(sessionId.value)
@@ -173,7 +173,7 @@ const doSave = async () => {
       ElMessage.error(res.errmsg)
     }
   } catch (error) {
-    ElMessage.error('保存问卷失败')
+    ElMessage.error('Gagal menyimpan survei')
   } finally {
     isSaving.value = false
   }

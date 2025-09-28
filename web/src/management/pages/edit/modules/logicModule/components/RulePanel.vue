@@ -14,7 +14,7 @@
     </div>
 
     <el-button type="primary" plain class="add" @click="handleAdd">
-      <i-ep-plus class="plus-icon" /> 新增显示逻辑
+      <i-ep-plus class="plus-icon" /> Tambahkan logika tampilan
     </el-button>
   </div>
 </template>
@@ -52,7 +52,7 @@ const formValidate = () => {
 const handleValide = () => {
   const validPass = formValidate()
   const result = !validPass.includes(false)
-  // result 为ture代表校验不通过
+  // jika hasilnya true, verifikasi gagal
   return !result
 }
 defineExpose({

@@ -1,306 +1,151 @@
 <template>
-  <div v-if="props.totalPage > 0" class="com-pagination">
-    <span :class="['com-pagination-item', prev_class]" @click="changePage(prev_page)">
-      <i-ep-ArrowLeft />
-    </span>
-    <template v-if="!is_more_filled">
+  <div class="pagination-container">
+    <div class="mobile-display">
+      Hal. {{ modelValue }} dari {{ totalPage }}
+    </div>
+
+    <div class="desktop-display">
+      <span :class="['nav-arrow', { disabled: modelValue === 1 }]" @click="changePage(modelValue - 1)">
+        <i-ep-ArrowLeft />
+      </span>
       <div
-        v-for="i in firstPagination"
-        :key="i"
-        :class="['com-pagination-item', `page-${i}`, now_page == i ? 'current' : '']"
-        @click="changePage(i)"
+        v-for="page in pagesToDisplay"
+        :key="page"
+        :class="['page-item', { current: modelValue === page, ellipsis: page === '...' }]"
+        @click="typeof page === 'number' && changePage(page)"
       >
-        <span>{{ i }}</span>
-        <div v-if="!props.readonly" :class="['moreControls']" @click.stop="showTooltipVisible(i)">
-          <i-ep-MoreFilled />
-        </div>
+        {{ page }}
       </div>
-    </template>
-    <template v-else>
-      <div
-        v-for="i in more_filled_arr.startArr"
-        @click="changePage(i)"
-        :key="i"
-        :class="['com-pagination-item', ` page-${i}`, now_page == i ? 'current' : '']"
-      >
-        <span>{{ i }}</span>
-        <div v-if="!props.readonly" :class="['moreControls']" @click.stop="showTooltipVisible(i)">
-          <i-ep-MoreFilled />
-        </div>
-      </div>
-      <el-tooltip class="controls-wrap" effect="light" placement="bottom" :visible="moreVisible">
-        <span class="com-pagination-item" @click.stop="moreVisible = true">
-          <i-ep-MoreFilled />
-        </span>
-        <template #content>
-          <div class="bubble-wrap">
-            <div
-              class="bubble-item"
-              v-for="i in more_filled_arr.bubbleArr"
-              :key="i"
-              @click="changePage(i)"
-            >
-              <span>{{ i }}</span>
-            </div>
-          </div>
-        </template>
-      </el-tooltip>
-      <div
-        v-for="i in more_filled_arr.endArr"
-        :key="i"
-        :class="['com-pagination-item', `page-${i}`, now_page == i ? 'current' : '']"
-        @click="changePage(i)"
-      >
-        <span>{{ i }}</span>
-        <div v-if="!props.readonly" :class="['moreControls']" @click.stop="showTooltipVisible(i)">
-          <i-ep-MoreFilled />
-        </div>
-      </div>
-    </template>
-    <span :class="['com-pagination-item', next_class]" @click="changePage(next_page)">
-      <i-ep-ArrowRight />
-    </span>
-    <el-tooltip
-      v-if="slot.tooltip && props.readonly == false"
-      :visible="tooltipVisible"
-      :popper-options="{
-        modifiers: [
-          {
-            name: 'computeStyles',
-            options: {
-              adaptive: false,
-              enabled: false
-            }
-          }
-        ]
-      }"
-      :virtual-ref="triggerBtn"
-      virtual-triggering
-      effect="light"
-      popper-class="singleton-tooltip"
-    >
-      <template #content>
-        <slot name="tooltip" :index="tooltipIndex"></slot>
-      </template>
-    </el-tooltip>
+      <span :class="['nav-arrow', { disabled: modelValue === totalPage }]" @click="changePage(modelValue + 1)">
+        <i-ep-ArrowRight />
+      </span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { clone } from 'lodash-es'
-import { reactive, computed, watch, ref, onMounted, onUnmounted, nextTick, useSlots } from 'vue'
+import { computed } from 'vue'
 
 interface Props {
-  modelValue: number // 页码
+  modelValue: number
   totalPage?: number
-  intervalCount?: number
-  readonly?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 1,
-  totalPage: 1,
-  intervalCount: 8,
-  readonly: false
+  totalPage: 1
 })
 const emit = defineEmits(['change-page', 'update:modelValue'])
 
-const state = reactive({
-  now: props.modelValue,
-  jump: ''
-})
-
-const slot = useSlots()
-
-const moreVisible = ref(false)
-const tooltipVisible = ref(false)
-const triggerBtn = ref<EventTarget | null>(null)
-const tooltipIndex = ref(0)
-
-const now_page = computed(() => {
-  return state.now * 1
-})
-const prev_class = computed(() => {
-  return now_page.value == 1 ? 'disabled' : ''
-})
-const next_class = computed(() => {
-  return now_page.value == props.totalPage ? 'disabled' : ''
-})
-const prev_page = computed(() => {
-  return now_page.value > 1 ? now_page.value - 1 : 1
-})
-
-const next_page = computed(() => {
-  return now_page.value < props.totalPage ? now_page.value + 1 : props.totalPage
-})
-
-const is_more_filled = computed(() => {
-  const intervalNum = props.totalPage - now_page.value + 1
-  if (intervalNum >= props.intervalCount + 1) {
-    return true
-  }
-  return false
-})
-
-const totalArr = computed(() => {
-  const arr = []
-  for (let i = 0; i < props.totalPage; i++) {
-    arr.push(i + 1)
-  }
-  return arr
-})
-
-const more_filled_arr = computed(() => {
-  let startArr = []
-  let bubbleArr = []
-  let endArr = []
-  const arr = clone(totalArr.value)
-  const intervalNum = Math.round(props.intervalCount / 2)
-  startArr = arr.slice(now_page.value - 1, intervalNum + now_page.value - 1)
-  endArr = arr.slice(intervalNum * -1)
-  bubbleArr = arr.slice(startArr[startArr.length - 1], endArr[0] - 1)
-  return {
-    startArr,
-    bubbleArr,
-    endArr
-  }
-})
-
-const firstPagination = computed(() => {
-  const arr = clone(totalArr.value)
-  return arr.splice(props.intervalCount * -1)
-})
-
 const changePage = (page: number) => {
-  state.now = page
-  emit('update:modelValue', state.now)
-  emit('change-page', state.now)
-}
-
-const showTooltipVisible = (index: number) => {
-  if (slot.tooltip) {
-    nextTick(() => {
-      tooltipIndex.value = index
-      triggerBtn.value = document.getElementsByClassName(`page-${index}`)[0] || null
-      tooltipVisible.value = true
-    })
+  if (page < 1 || page > props.totalPage) {
+    return
   }
+  emit('update:modelValue', page)
+  emit('change-page', page)
 }
 
-const hideMoreVisible = () => {
-  moreVisible.value = false
-}
+// Logika baru yang lebih sederhana untuk menampilkan halaman
+const pagesToDisplay = computed(() => {
+  const total = props.totalPage
+  const current = props.modelValue
+  const pageNumbers = []
+  const maxPagesToShow = 7 // Total item, termasuk elipsis
 
-const hideTooltipVisible = () => {
-  tooltipVisible.value = false
-}
+  if (total <= maxPagesToShow) {
+    for (let i = 1; i <= total; i++) {
+      pageNumbers.push(i)
+    }
+  } else {
+    pageNumbers.push(1)
+    if (current > 4) {
+      pageNumbers.push('...')
+    }
+    let start = Math.max(2, current - 1)
+    let end = Math.min(total - 1, current + 1)
 
-onMounted(() => {
-  document.addEventListener('click', hideMoreVisible)
-  if (slot.tooltip) {
-    document.addEventListener('click', hideTooltipVisible)
+    if (current <= 4) {
+      start = 2
+      end = 4
+    }
+    if (current >= total - 3) {
+      start = total - 3
+      end = total - 1
+    }
+
+    for (let i = start; i <= end; i++) {
+      pageNumbers.push(i)
+    }
+    if (current < total - 3) {
+      pageNumbers.push('...')
+    }
+    pageNumbers.push(total)
   }
+  return pageNumbers
 })
-
-onUnmounted(() => {
-  document.removeEventListener('click', hideMoreVisible)
-  if (slot.tooltip) {
-    document.removeEventListener('click', hideTooltipVisible)
-  }
-})
-
-watch(
-  () => props.modelValue,
-  () => {
-    state.now = props.modelValue
-  }
-)
 </script>
-<style lang="scss" scoped>
-.bubble-wrap {
-  .bubble-item {
-    max-width: 100px;
-    min-width: 10px;
-    text-align: center;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 6px;
 
-    &:hover {
-      background-color: #cccc;
-    }
+<style lang="scss" scoped>
+.pagination-container {
+  user-select: none;
+}
+
+.desktop-display {
+  display: none; // Sembunyikan di mobile
+  align-items: center;
+  gap: 4px;
+}
+
+.mobile-display {
+  display: block; // Tampilkan di mobile
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.page-item, .nav-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #606266;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: #f0f2f5;
   }
 }
 
-.com-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0;
-  user-select: none;
-  .moreControls {
-    color: #6e707c;
-    display: none;
-
-    position: absolute;
-    left: 22px;
-    svg {
-      transform: rotate(90deg);
-      font-size: 10px;
-    }
+.nav-arrow {
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: transparent;
   }
-  &-item {
-    display: inline-block;
-    position: relative;
-    // padding: 0 4px;
-    min-width: 32px;
-    height: 32px;
-    color: #303133;
-    border-radius: 2px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 14px;
+}
+
+.page-item {
+  &.current {
+    background-color: $primary-color;
+    color: #fff;
+    font-weight: 500;
+  }
+  &.ellipsis {
+    cursor: default;
+    background-color: transparent;
+  }
+}
+
+// Tampilkan paginasi desktop di layar yang lebih besar
+@media (min-width: 768px) {
+  .desktop-display {
     display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-      color: $primary-color;
-      .moreControls {
-        display: block;
-      }
-    }
-
-    &.active {
-      color: $primary-color;
-      .moreControls {
-        display: block;
-      }
-    }
-
-    svg {
-      display: block;
-      font-size: 12px;
-      font-weight: bold;
-      width: inherit;
-      cursor: pointer;
-
-      &:hover {
-        color: $primary-color;
-      }
-    }
   }
-
-  .disabled,
-  .disabled:hover {
-    svg {
-      cursor: not-allowed;
-      color: #303133 !important;
-    }
-  }
-
-  .current,
-  .current:hover {
-    color: $primary-color;
+  .mobile-display {
+    display: none;
   }
 }
 </style>

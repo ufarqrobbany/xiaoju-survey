@@ -1,14 +1,14 @@
 <template>
   <el-popover placement="top" trigger="click" @show="handlePopoverShow" :width="320">
     <el-tabs v-model="currentTab" class="custom-tab" v-if="visible" v-loading="loading">
-      <el-tab-pane label="修改历史" name="daily" class="custom-tab-pane">
+      <el-tab-pane label="Riwayat Perubahan" name="daily" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in dailyList" :key="index">
           <span class="operator">{{ his.operator }}</span>
           <span class="seperator">|</span>
           <span>{{ his.time }}</span>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="发布历史" name="publish" class="custom-tab-pane">
+      <el-tab-pane label="Riwayat Publikasi" name="publish" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in publishList" :key="index">
           <span class="operator">{{ his.operator }}</span>
           <span class="seperator">|</span>
@@ -19,7 +19,7 @@
     <template #reference>
       <div class="btn">
         <i class="iconfont icon-lishi"></i>
-        <span class="btn-txt">历史</span>
+        <span class="btn-txt">Riwayat</span>
       </div>
     </template>
   </el-popover>
@@ -33,7 +33,7 @@ import moment from 'moment'
 import { getSurveyHistory } from '@/management/api/survey'
 
 const getItemData = (item: any) => ({
-  operator: item?.operator?.username || '未知用户',
+  operator: item?.operator?.username || 'Pengguna Tidak Dikenal',
   time: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
 })
 

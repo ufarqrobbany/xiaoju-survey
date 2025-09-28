@@ -1,6 +1,6 @@
 <template>
   <span type="primary" :loading="isPublishing" class="publish-btn" @click="handlePublish">
-    发布
+    Publikasikan
   </span>
 </template>
 <script setup lang="ts">
@@ -38,12 +38,12 @@ const validate = () => {
   const { validated, message } = props.updateLogicConf()
   if (!validated) {
     checked = validated
-    msg = `检查页面"问卷编辑>显示逻辑"：${message}`
+    msg = `Periksa halaman "Pengaturan Kuesioner > Logika Tampil": ${message}`
   }
   const { validated: whiteValidated, message: whiteMsg } = props.updateWhiteConf()
   if (!whiteValidated) {
     checked = whiteValidated
-    msg = `检查页面"问卷设置>作答限制"：${whiteMsg}`
+    msg = `Periksa halaman "Pengaturan Kuesioner > Batasan Jawaban": ${whiteMsg}`
   }
 
   return {
@@ -54,11 +54,11 @@ const validate = () => {
 
 const onSave = async () => {
   if (!saveData.value.sessionId) {
-    ElMessage.error('未获取到sessionId')
+    ElMessage.error('sessionId tidak ditemukan, silakan segarkan halaman')
     return null
   }
   if (!saveData.value.surveyId) {
-    ElMessage.error('未获取到问卷id')
+    ElMessage.error('surveyId tidak ditemukan, silakan segarkan halaman')
     return null
   }
 
@@ -68,11 +68,11 @@ const onSave = async () => {
       return null
     }
     if (res.code === 200) {
-      ElMessage.success('保存成功')
+      ElMessage.success('Berhasil disimpan')
       return res
     } else if (res.code === 3006) {
-      ElMessageBox.alert(res.errmsg, '提示', {
-        confirmButtonText: '刷新同步',
+      ElMessageBox.alert(res.errmsg, 'Info', {
+        confirmButtonText: 'Sinkronkan Ulang',
         callback: (action: string) => {
           if (action === 'confirm') {
             props.seize(sessionId.value)
@@ -85,7 +85,7 @@ const onSave = async () => {
       return null
     }
   } catch (error) {
-    ElMessage.error('保存问卷失败')
+    ElMessage.error('Gagal menyimpan survei')
     return null
   }
 }
@@ -111,14 +111,14 @@ const handlePublish = async () => {
     }
     const publishRes: any = await publishSurvey({ surveyId: saveData.value.surveyId })
     if (publishRes.code === 200) {
-      ElMessage.success('发布成功')
+      ElMessage.success('Berhasil dipublikasikan')
       getSchemaFromRemote()
       router.push({ name: 'channel' })
     } else {
-      ElMessage.error(`发布失败 ${publishRes.errmsg}`)
+      ElMessage.error(`Gagal mempublikasikan ${publishRes.errmsg}`)
     }
   } catch (err) {
-    ElMessage.error(`发布失败`)
+    ElMessage.error(`Gagal mempublikasikan`)
   } finally {
     isPublishing.value = false
   }

@@ -1,33 +1,44 @@
 <template>
-  <div class="nav">
+  <div class="nav-responsive">
     <div class="left-group">
-      <BackPanel></BackPanel>
-      <TitlePanel :style="{ marginLeft: '30px' }" :title="title"></TitlePanel>
+      <BackPanel />
+      <TitlePanel class="title-panel" :title="title" />
     </div>
+
     <div class="center-group">
-      <NavPanel></NavPanel>
+      <NavPanel />
     </div>
+
     <div class="right-group">
       <CooperationPanel>
         <template #content="{ onCooper }">
           <div class="btn" @click="onCooper">
-            <i-ep-connection class="view-icon" :size="20" />
-            <span class="btn-txt">协作</span>
+            <i-ep-connection class="view-icon" />
+            <span class="btn-txt">Kolaborasi</span>
           </div>
         </template>
       </CooperationPanel>
-      <PreviewPanel></PreviewPanel>
-      <HistoryPanel></HistoryPanel>
-      <SavePanel
-        :updateLogicConf="updateLogicConf"
-        :updateWhiteConf="updateWhiteConf"
-        :seize="seize"
-      ></SavePanel>
-      <PublishPanel
-        :updateLogicConf="updateLogicConf"
-        :updateWhiteConf="updateWhiteConf"
-        :seize="seize"
-      ></PublishPanel>
+      <PreviewPanel />
+
+      <div class="desktop-only-actions">
+        <HistoryPanel />
+      </div>
+      
+      <SavePanel :update-logic-conf="updateLogicConf" :update-white-conf="updateWhiteConf" :seize="seize" />
+      <PublishPanel :update-logic-conf="updateLogicConf" :update-white-conf="updateWhiteConf" :seize="seize" />
+      
+      <el-dropdown class="mobile-only-actions" trigger="click">
+        <span class="el-dropdown-link">
+          <el-icon class="more-icon"><MoreFilled /></el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>
+              <HistoryPanel />
+            </el-dropdown-item>
+            </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -55,7 +66,7 @@ const { schema, changeSchema } = editStore
 const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 
 const { showLogicEngine, jumpLogicEngine } = storeToRefs(editStore)
-// 校验 - 逻辑
+
 const updateLogicConf = () => {
   const { active } = route.query
   let res = {
@@ -63,7 +74,7 @@ const updateLogicConf = () => {
     message: ''
   }
 
-  // 如果显示逻辑和跳转逻辑都设置了需要删除一个后才能保存成功
+  // Jika logika tampilan dan logika lompatan keduanya diatur, satu harus dihapus sebelum penyimpanan berhasil
   if (
     (showLogicEngine.value?.rules?.length && active === 'jumpLogic') ||
     (jumpLogicEngine.value.rules?.length && active === 'showLogic')
@@ -72,8 +83,8 @@ const updateLogicConf = () => {
       validated: false,
       message:
         active === 'jumpLogic'
-          ? '存在显示逻辑配置，删除后才能设置跳转逻辑'
-          : '存在跳转逻辑配置，删除后才能设置显示逻辑'
+          ? 'Logika Tampilan ada, hapus dulu untuk atur Logika Lompatan' 
+          : 'Logika Lompatan ada, hapus dulu untuk atur Logika Tampilan' 
     }
   }
 
@@ -87,7 +98,7 @@ const updateLogicConf = () => {
     } catch (error) {
       res = {
         validated: false,
-        message: '逻辑配置不能为空'
+        message: 'Konfigurasi logika tidak boleh kosong' 
       }
 
       return res
@@ -95,7 +106,6 @@ const updateLogicConf = () => {
 
     const showLogicConf = showLogicEngine.value.toJson()
     if (JSON.stringify(schema.logicConf.showLogicConf) !== JSON.stringify(showLogicConf)) {
-      // 更新逻辑配置
       changeSchema({ key: 'logicConf', value: { showLogicConf } })
     }
 
@@ -109,7 +119,6 @@ const updateLogicConf = () => {
   return res
 }
 
-// 校验 - 白名单
 const updateWhiteConf = () => {
   let res = {
     validated: true,
@@ -119,14 +128,14 @@ const updateWhiteConf = () => {
   if (baseConf.passwordSwitch && !baseConf.password) {
     res = {
       validated: false,
-      message: '访问密码不能为空'
+      message: 'Kata sandi akses tidak boleh kosong' 
     }
     return res
   }
   if (baseConf.whitelistType != 'ALL' && !baseConf.whitelist?.length) {
     res = {
       validated: false,
-      message: '白名单不能为空'
+      message: 'Whitelist tidak boleh kosong' 
     }
     return res
   }
@@ -139,47 +148,113 @@ const seize = async (sessionId: string) => {
   if (seizeRes.code === 200) {
     location.reload()
   } else {
-    ElMessage.error('获取权限失败，请重试')
+    ElMessage.error('Gagal mendapatkan hak akses, silakan coba lagi')
   }
 }
 </script>
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
-.view-icon {
-  font-size: 20px;
-  height: 29px;
-  line-height: 29px;
-}
-.nav {
+
+.nav-responsive {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   height: 56px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0 16px;
   background-color: #fff;
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  .center-group {
-    height: 100%;
-    flex: 1;
-    justify-content: center;
-  }
-  .left-group,
-  .right-group {
-    position: absolute;
-    top: 0;
-    height: 100%;
-  }
+  border-bottom: 1px solid #e7e9eb;
+  box-sizing: border-box;
+}
+
+// Styling untuk setiap grup
+.left-group,
+.center-group,
+.right-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .left-group {
-  left: 18px;
+  // Biarkan lebar menyesuaikan konten
+  flex-shrink: 0;
+  .title-panel {
+    // Agar judul tidak terpotong tiba-tiba
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px; // Batasi lebar maksimum judul
+  }
 }
+
+.center-group {
+  flex-grow: 1; // Biarkan grup tengah mengisi ruang kosong
+  justify-content: center;
+  min-width: 0; // Penting agar bisa menyusut!
+}
+
 .right-group {
-  right: 18px;
+  // Biarkan lebar menyesuaikan konten
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.view-icon {
+  font-size: 20px;
+}
+
+// Sembunyikan/tampilkan elemen berdasarkan ukuran layar
+.desktop-only-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-only-actions {
+  display: none; // Sembunyikan dropdown di desktop
+  .more-icon {
+    font-size: 24px;
+    cursor: pointer;
+    color: #555;
+    margin-left: 8px;
+  }
+}
+
+// --- Media Queries untuk Responsivitas ---
+
+// Tablet (misal < 1024px)
+@media (max-width: 1024px) {
+  .desktop-only-actions {
+    display: none; // Sembunyikan aksi desktop
+  }
+  .mobile-only-actions {
+    display: block; // Tampilkan dropdown "more"
+  }
+}
+
+// Mobile (misal < 768px)
+@media (max-width: 768px) {
+  .nav-responsive {
+    padding: 0 12px; // Perkecil padding
+  }
+  
+  .center-group {
+    display: none; // Sembunyikan navigasi tengah
+  }
+  
+  .left-group .title-panel {
+    max-width: 120px; // Perkecil lagi lebar judul
+  }
+  
+  // Sembunyikan teks pada tombol agar lebih ringkas
+  .right-group .btn-txt {
+    display: none;
+  }
+  
+  // Sesuaikan tombol agar hanya ikon
+  .right-group .btn {
+    padding: 6px;
+  }
 }
 </style>

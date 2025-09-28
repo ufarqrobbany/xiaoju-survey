@@ -2,49 +2,49 @@
 export default {
   base_effectTime: {
     keys: ['beginTime', 'endTime'],
-    label: '答题有效期',
+    label: 'Masa berlaku jawaban',
     type: 'QuestionTime',
     placeholder: 'yyyy-MM-dd hh:mm:ss'
   },
   limit_tLimit: {
     key: 'tLimit',
-    label: '问卷回收总数',
+    label: 'Batas total pengembalian kuesioner',
     type: 'InputNumber',
-    tip: '0为无限制，此功能用于限制该问卷总提交的数据量。当数据量达到限额时，该问卷将不能继续提交',
+    tip: '0 untuk tidak terbatas, fitur ini digunakan untuk membatasi jumlah data yang dapat dikirimkan oleh kuesioner ini. Ketika jumlah data mencapai batas, kuesioner ini tidak dapat dilanjutkan.',
     tipShow: true,
     placement: 'top',
     min: 0
   },
   limit_answerTime: {
     keys: ['answerBegTime', 'answerEndTime'],
-    label: '答题时段',
-    tip: '问卷仅在指定时间段内可填写',
+    label: 'Waktu menjawab',
+    tip: 'Kuesioner hanya dapat diisi dalam rentang waktu yang ditentukan',
     type: 'QuestionTimeHour',
     placement: 'top'
   },
   limit_fillAnswer: {
     key: 'fillAnswer',
-    label: '允许断点续答',
-    tip: '回填前一次作答中的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
+    label: 'Mengizinkan melanjutkan jawaban sebelumnya',
+    tip: 'Isi ulang konten jawaban sebelumnya (Catatan: Fungsi ini tidak akan valid jika Anda mengubah perangkat/browser/menghapus cache/mengubah konten dan menerbitkan ulang)',
     placement: 'top',
     type: 'CustomedSwitch'
   },
   limit_fillSubmitAnswer: {
     key: 'fillSubmitAnswer',
-    label: '自动填充上次提交内容',
-    tip: '回填前一次提交的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
+    label: 'Mengizinkan pengisian otomatis konten yang diajukan sebelumnya',
+    tip: 'Isi ulang konten jawaban sebelumnya (Catatan: Fungsi ini tidak akan valid jika Anda mengubah perangkat/browser/menghapus cache/mengubah konten dan menerbitkan ulang)',
     placement: 'top',
     type: 'CustomedSwitch'
   },
   interview_pwd_switch: {
     key: 'passwordSwitch',
-    label: '访问密码',
+    label: 'Kata sandi akses',
     type: 'CustomedSwitch'
   },
   interview_pwd: {
     key: 'password',
     type: 'InputSetter',
-    placeholder: '请输入6位字符串类型访问密码 ',
+    placeholder: 'Silakan masukkan kata sandi akses tipe string 6 karakter ',
     maxLength: 6,
     relyFunc: (data) => {
       return !!data?.passwordSwitch
@@ -52,19 +52,19 @@ export default {
   },
   answer_type: {
     key: 'whitelistType',
-    label: '答题名单',
+    label: 'Daftar jawaban',
     type: 'RadioGroup',
     options: [
       {
-        label: '所有人',
+        label: 'Semua orang',
         value: 'ALL'
       },
       {
-        label: '空间成员',
+        label: 'Anggota ruang tim',
         value: 'MEMBER'
       },
       {
-        label: '白名单',
+        label: 'Daftar putih',
         value: 'CUSTOM'
       }
     ],
@@ -89,8 +89,8 @@ export default {
   },
   white_placeholder: {
     key: 'whitelistTip',
-    label: '名单登录提示语',
-    placeholder: '请输入名单提示语',
+    label: 'Daftar putih login tip',
+    placeholder: 'Silakan masukkan daftar putih tip',
     type: 'InputSetter',
     maxLength: 40,
     relyFunc: (data) => {
@@ -99,7 +99,7 @@ export default {
   },
   white_list: {
     keys: ['whitelist', 'memberType'],
-    label: '白名单列表',
+    label: 'Daftar putih',
     type: 'WhiteList',
     custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
@@ -108,7 +108,7 @@ export default {
   },
   team_list: {
     key: 'whitelist',
-    label: '团队空间成员选择',
+    label: 'Pemilihan anggota ruang tim',
     type: 'TeamMemberList',
     custom: true, // 自定义导入高级组件
     relyFunc: (data) => {

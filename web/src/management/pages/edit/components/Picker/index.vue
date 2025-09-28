@@ -4,8 +4,8 @@
     <transition name="slide-picker" >
       <div class="x-picker" @click.stop v-show="modelValue">
         <div class="x-picker__header">
-          <p class="x-picker__header-left" @click.stop="handleCancel">取消</p>
-          <p class="x-picker__header-right" @click.stop="handleConfirm">确定</p>
+          <p class="x-picker__header-left" @click.stop="handleCancel">Batalkan</p>
+          <p class="x-picker__header-right" @click.stop="handleConfirm">Konfirmasi</p>
         </div>
         <div class="x-picker__content">
           <div class="x-picker__content-wrapper"></div>

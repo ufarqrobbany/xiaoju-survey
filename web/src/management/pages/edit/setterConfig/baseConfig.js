@@ -1,16 +1,16 @@
 export default [
   {
-    title: '时间配置',
+    title: 'Konfigurasi Waktu',
     key: 'timeConfig',
     formList: ['base_effectTime', 'limit_answerTime']
   },
   {
-    title: '提交限制',
+    title: 'Batas Pengiriman',
     key: 'limitConfig',
     formList: ['limit_tLimit', 'limit_fillAnswer', 'limit_fillSubmitAnswer']
   },
   {
-    title: '作答限制',
+    title: 'Batas Jawaban',
     key: 'respondConfig',
     formList: [
       'interview_pwd_switch',

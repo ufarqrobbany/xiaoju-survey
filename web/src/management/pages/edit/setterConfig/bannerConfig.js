@@ -1,30 +1,30 @@
 export default [
   {
-    label: '顶部图片地址',
+    label: 'Alamat gambar teratas',
     type: 'InputSetter',
     key: 'bgImage',
     labelStyle: { width: '120px' }
   },
   {
-    label: '顶部视频地址',
+    label: 'Alamat video teratas',
     type: 'InputSetter',
     key: 'videoLink',
     labelStyle: { width: '120px' }
   },
   {
-    label: '视频海报地址',
+    label: 'Alamat poster video',
     type: 'InputSetter',
     key: 'postImg',
     labelStyle: { width: '120px' }
   },
   {
-    label: '图片支持点击',
+    label: 'Gambar mendukung klik',
     type: 'CustomedSwitch',
     labelStyle: { width: '120px' },
     key: 'bgImageAllowJump'
   },
   {
-    label: '跳转链接',
+    label: 'Tautan',
     type: 'InputSetter',
     labelStyle: { width: '120px' },
     key: 'bgImageJumpLink',

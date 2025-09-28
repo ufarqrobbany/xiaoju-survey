@@ -1,7 +1,7 @@
 <template>
-  <div class="edit-index">
-    <LeftMenu class="left"></LeftMenu>
-    <div class="right">
+  <div class="edit-layout">
+    <LeftMenu class="left-menu"></LeftMenu>
+    <div class="main-content">
       <CommonTemplate style="background-color: #f6f7f9">
         <template #nav>
           <Navbar class="navbar"></Navbar>
@@ -13,7 +13,9 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+// --- Bagian <script> tidak perlu diubah, sudah sangat baik ---
 import { onMounted, watch } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
@@ -37,11 +39,9 @@ watch(
     const { themeConf, backgroundConf, contentConf } = skinConfig
 
     if (themeConf?.color) {
-      // 设置主题颜色
       root.style.setProperty('--primary-color', themeConf?.color)
     }
 
-    // 设置背景
     const { color, type, image } = backgroundConf || {}
     root.style.setProperty(
       '--primary-background',
@@ -49,7 +49,6 @@ watch(
     )
 
     if (contentConf?.opacity.toString()) {
-      // 设置全局透明度
       root.style.setProperty('--opacity', `${contentConf.opacity / 100}`)
     }
   },
@@ -74,28 +73,40 @@ onMounted(async () => {
   }
 })
 </script>
+
 <style lang="scss" scoped>
-.edit-index {
-  height: 100%;
+// --- REFAKTOR TOTAL STYLE DENGAN PENDEKATAN MOBILE-FIRST ---
+.edit-layout {
+  display: flex;
+  // Awalnya, layout disusun vertikal untuk mobile
+  flex-direction: column;
+  height: 100vh; // Mengisi seluruh tinggi layar
   width: 100%;
   overflow: hidden;
+}
 
-  .left {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-  }
+.main-content {
+  // Konten utama akan mengisi sisa ruang yang tersedia
+  flex-grow: 1;
+  // Penting agar CommonTemplate bisa mengisi 100% tinggi
+  height: 100%;
+  overflow: hidden;
+}
 
-  .right {
-    min-width: 1300px;
-    height: 100%;
-    padding-left: 80px;
-    overflow: hidden;
-  }
+.navbar {
+  border-bottom: 1px solid #e7e9eb;
+}
 
-  .navbar {
-    border-bottom: 1px solid #e7e9eb;
+// --- Media Query untuk layar lebih besar (Tablet & Desktop) ---
+@media (min-width: 768px) {
+  .edit-layout {
+    // Ubah layout menjadi horizontal (sidebar di kiri, konten di kanan)
+    flex-direction: row;
   }
 }
+
+// --- CATATAN PENTING ---
+// Pastikan LeftMenu.vue juga sudah memiliki style responsif
+// seperti yang pernah kita diskusikan sebelumnya, agar bisa
+// berubah menjadi bottom-nav di mobile dan sidebar di desktop.
 </style>

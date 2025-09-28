@@ -1,41 +1,57 @@
 <template>
-  <div class="pagination-wrap">
+  <div class="page-controls-strip">
+    <div class="controls-group left">
+      <el-button :icon="Plus" type="primary" plain @click="addPageControls">
+        Halaman Baru
+      </el-button>
+    </div>
+
     <PaginationPanel
       v-model="schema.pageEditOne"
       :readonly="props.readonly"
       :totalPage="pageCount"
       @changePage="updatePage"
-      :intervalCount="10"
-    >
-      <template #tooltip="{ index }">
-        <div>
-          <div v-if="index != 1" class="controls-wrap-item" @click="movePage(index, 'up')">
-            前移一页
-          </div>
-          <div
-            v-if="index != pageCount"
-            class="mt8 controls-wrap-item"
-            @click="movePage(index, 'down')"
-          >
-            后移一页
-          </div>
-          <div class="mt8 controls-wrap-item" @click="copyPage(index)">复制</div>
-          <div class="mt8 controls-wrap-item" @click="deletePage(index)">删除</div>
-        </div>
-      </template>
-    </PaginationPanel>
-    <i-ep-plus
-      v-if="!props.readonly"
-      style="font-size: 12px"
-      @click="addPageControls"
-      class="plus-add"
     />
+
+    <div class="controls-group right">
+      <el-tooltip content="Pindah ke Atas" placement="top">
+        <el-button
+          :icon="Top"
+          circle
+          :disabled="schema.pageEditOne === 1"
+          @click="movePage('up')"
+        />
+      </el-tooltip>
+      <el-tooltip content="Pindah ke Bawah" placement="top">
+        <el-button
+          :icon="Bottom"
+          circle
+          :disabled="schema.pageEditOne === pageCount"
+          @click="movePage('down')"
+        />
+      </el-tooltip>
+      <el-tooltip content="Salin Halaman" placement="top">
+        <el-button :icon="CopyDocument" circle @click="copyPage(schema.pageEditOne)" />
+      </el-tooltip>
+      <el-tooltip content="Hapus Halaman" placement="top">
+        <el-button
+          :icon="Delete"
+          circle
+          type="danger"
+          plain
+          :disabled="pageCount <= 1"
+          @click="deletePage(schema.pageEditOne)"
+        />
+      </el-tooltip>
+    </div>
   </div>
 </template>
+
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import { QUESTION_TYPE } from '@/common/typeEnum.ts'
+import { Top, Bottom, Plus, CopyDocument, Delete } from '@element-plus/icons-vue'
 
 import PaginationPanel from './PaginationPanel.vue'
 
@@ -66,7 +82,8 @@ const updatePage = (index) => {
   updatePageEditOne(index)
 }
 
-const movePage = (position, type) => {
+const movePage = (type) => {
+  const position = schema.value.pageEditOne
   setCurrentEditOne(null)
   const pageIndex = type === 'up' ? position - 1 : position + 1
   updatePageEditOne(pageIndex)
@@ -92,38 +109,43 @@ const addPageControls = () => {
 </script>
 
 <style lang="scss" scoped>
-.mt8 {
-  margin-top: 8px;
+.page-controls-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
-.controls-wrap {
-  &-item {
-    color: #4a4c5b;
-    font-size: 12px;
-    font-weight: 400;
-    cursor: pointer;
-
-    &:hover {
-      color: $primary-color;
-    }
-  }
-}
-
-.pagination-wrap {
+.controls-group {
   display: flex;
   align-items: center;
-  background: #ffffff;
-  box-shadow: 0px 2px 10px -2px rgba(82, 82, 102, 0.2);
-  border-radius: 4px;
-  margin-bottom: 12px;
+  gap: 8px;
+}
 
-  .plus-add {
-    cursor: pointer;
-    margin-left: 12px;
-
-    &:hover {
-      color: $primary-color;
-    }
+// Di mobile, tombol aksi pindah ke kiri agar lebih hemat tempat
+@media (max-width: 768px) {
+  .page-controls-strip {
+    flex-wrap: wrap; // Biarkan item turun jika tidak muat
+    gap: 12px;
+    padding: 12px;
+    justify-content: center;
+  }
+  .left {
+    order: 2;
+  }
+  .right {
+    order: 1;
+    flex-grow: 1;
+    justify-content: center;
+  }
+  // Sembunyikan tombol "Halaman Baru"
+  .left .el-button {
+    display: none;
   }
 }
 </style>

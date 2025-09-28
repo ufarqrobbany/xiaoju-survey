@@ -1,9 +1,9 @@
 <template>
   <div>
-    <span class="primary-color" @click="openOptionConfig"> 高级设置 > </span>
+    <span class="primary-color" @click="openOptionConfig"> Pengaturan Lanjutan > </span>
 
     <el-dialog
-      title="选项高级设置"
+      title="Pengaturan Lanjutan"
       class="option-config-wrapper"
       v-model="configVisible"
       :append-to-body="true"
@@ -12,8 +12,8 @@
     >
       <div class="option-handwrite">
         <div class="option-header">
-          <div class="header-item flex-1">选项内容</div>
-          <div class="header-item w285" v-if="showOthers">选项后增添输入框</div>
+          <div class="header-item flex-1">Konten Pilihan</div>
+          <div class="header-item w285" v-if="showOthers">Tambahkan kotak input setelah pilihan</div>
         </div>
         <div>
           <draggable :list="curOptions" handle=".drag-handle" itemKey="hash">
@@ -34,13 +34,13 @@
                     @change="(val) => changeOptionOthers(val, element)"
                   ></el-switch>
                   <div class="more-info-content" v-if="element.others">
-                    <el-input v-model="element.placeholderDesc" placeholder="提示文案"></el-input>
-                    <el-checkbox v-model="element.mustOthers">必填</el-checkbox>
+                    <el-input v-model="element.placeholderDesc" placeholder="Silakan masukkan konten"></el-input>
+                    <el-checkbox v-model="element.mustOthers">Wajib diisi</el-checkbox>
                   </div>
                 </div>
 
                 <div class="operate-area">
-                  <i-ep-circlePlus class="area-btn-icon" @click="addOption('选项', false, index)" />
+                  <i-ep-circlePlus class="area-btn-icon" @click="addOption('Pilihan', false, index)" />
                   <i-ep-remove
                     v-show="curOptions.length"
                     class="area-btn-icon"
@@ -53,18 +53,18 @@
         </div>
         <div class="add-btn-row">
           <div class="add-option" @click="addOption()">
-            <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 添加新选项 </span>
+            <span class="add-option-item"> <i-ep-circlePlus class="icon" /> Tambah Pilihan </span>
           </div>
 
           <div class="add-option" @click="addOtherOption" v-if="showOthers">
-            <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 其他____ </span>
+            <span class="add-option-item"> <i-ep-circlePlus class="icon" /> Lainnya </span>
           </div>
         </div>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="configVisible = false">取消</el-button>
-          <el-button type="primary" @click="optionConfigChange">确认</el-button>
+          <el-button @click="configVisible = false">Batal</el-button>
+          <el-button type="primary" @click="optionConfigChange">Konfirmasi</el-button>
         </span>
       </template>
     </el-dialog>
@@ -140,13 +140,13 @@ export default {
       this.curOptions = _cloneDeep(editStore.moduleConfig.options)
     },
     addOtherOption() {
-      this.addOption('其他', true, -1, this.fieldId)
+      this.addOption('Lainnya', true, -1, this.fieldId)
     },
     openOptionConfig() {
       this.configVisible = true
       this.initCurOption()
     },
-    addOption(text = '选项', others = false, index = -1, fieldId) {
+    addOption(text = 'Pilihan', others = false, index = -1, fieldId) {
       let addOne = {
         text: '',
         hash: '',
@@ -184,7 +184,7 @@ export default {
         this.curOptions = newOptions
         this.importKey = 'single'
       } else {
-        ElMessage.warning('最少保留一项')
+        ElMessage.warning('Simpan setidaknya satu item')
       }
     },
     getNewHash() {
@@ -215,7 +215,7 @@ export default {
         this.curOptions.forEach((item, index) => {
           item.label = this.options[index].label || ''
         })
-        ElMessage.warning('已存在相同的标签内容，请重新输入')
+        ElMessage.warning('Konten tag yang sama sudah ada, silakan masukkan kembali')
         return
       }
       this.$emit('handleChange', { key: 'options', value: this.curOptions })

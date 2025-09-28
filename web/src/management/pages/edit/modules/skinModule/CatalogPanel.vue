@@ -1,13 +1,24 @@
 <template>
-  <div class="tab-box">
-    <div class="title">主题设置</div>
-    <div class="content">
+  <div class="panel-container">
+    <div class="panel-header">
+      <h3 class="panel-title">Pengaturan Tema</h3>
+      <el-button :icon="Close" circle plain @click="uiStore.toggleCatalog()"></el-button>
+    </div>
+
+    <div class="panel-content">
       <div class="tag-list">
         <el-tag
-          v-for="item in groupList"
-          :class="[groupName === item.value ? 'current' : '', 'tag']"
+          :class="['tag', { current: groupName === 'temp' }]"
           type="info"
+          @click="() => handleChangeGroup('temp')"
+        >
+          Semua
+        </el-tag>
+        <el-tag
+          v-for="item in groupList"
           :key="item.value"
+          :class="['tag', { current: groupName === item.value }]"
+          type="info"
           @click="() => handleChangeGroup(item.value)"
         >
           {{ item.label }}
@@ -16,8 +27,8 @@
       <div class="banner-list-wrapper">
         <div
           class="single-banner-wrapper"
-          v-for="(banner, bannerIndex) in currentBannerList"
-          :key="bannerIndex"
+          v-for="banner in currentBannerList"
+          :key="banner.src"
         >
           <img class="banner-img" :src="banner.src" loading="lazy" @click="changePreset(banner)" />
         </div>
@@ -25,16 +36,39 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
+import { useUiStore } from '@/management/stores/ui'
 import { getBannerData } from '@/management/api/skin.js'
 import skinPresets from '@/management/config/skinPresets.js'
+import { Close } from '@element-plus/icons-vue'
 
+// --- Definisi Tipe untuk Keamanan dan Kejelasan Kode ---
+interface BannerItem {
+  src: string;
+  title: string;
+  group: string;
+}
+
+interface BannerGroup {
+  key: string;
+  name: string;
+  list: BannerItem[];
+}
+
+interface BannerData {
+  [key: string]: BannerGroup;
+}
+// ---
+
+const uiStore = useUiStore()
 const editStore = useEditStore()
 const { changeThemePreset } = editStore
+
 const groupName = ref<string>('temp')
-let bannerList = ref<string[]>([])
+const bannerList = ref<BannerData>({})
 
 onMounted(async () => {
   const res = await getBannerData()
@@ -42,118 +76,121 @@ onMounted(async () => {
 })
 
 const groupList = computed(() =>
-  Object.keys(bannerList.value).map((key) => ({
-    label: (bannerList.value as any)[key].name,
+  Object.entries(bannerList.value).map(([key, group]) => ({
+    label: group.name,
     value: key
   }))
 )
+
+const allBanners = computed(() =>
+  Object.values(bannerList.value).flatMap(group =>
+    group.list.map(item => ({ ...item, group: group.key }))
+  )
+)
+
 const currentBannerList = computed(() => {
-  const arr = Object.keys(bannerList.value)
-    .map((key) => {
-      return (bannerList.value as any)[key]
-    })
-    .map((data) => {
-      return data.list.map((item: any) => {
-        item.group = data.key
-        return item
-      })
-    })
-
-  const allBanner = arr.reduce((acc, curr) => {
-    return acc.concat(curr)
-  }, [])
-
-  return allBanner.filter((item: any) => {
-    if (groupName.value === 'temp') {
-      return true
-    } else {
-      return item.group === groupName.value
-    }
-  })
+  if (groupName.value === 'temp') {
+    return allBanners.value
+  }
+  return allBanners.value.filter(item => item.group === groupName.value)
 })
 
 const handleChangeGroup = (value: string) => {
   groupName.value = value
 }
 
-const changePreset = (banner: any) => {
-  const name = banner.group + '-' + banner.title
+const changePreset = (banner: BannerItem) => {
+  const name = `${banner.group}-${banner.title}`
   let presets = {
     'bannerConf.bannerConfig.bgImage': banner.src,
     'skinConf.themeConf.color': '#faa600',
     'skinConf.backgroundConf.color': '#f6f7f9'
   }
 
-  if ((skinPresets as any)[name]) {
-    presets = Object.assign(presets, (skinPresets as any)[name])
+  const presetConfig = (skinPresets as Record<string, any>)[name];
+
+  if (presetConfig) {
+    presets = { ...presets, ...presetConfig }
   }
 
   changeThemePreset(presets)
 }
 </script>
+
 <style lang="scss" scoped>
-.tab-box {
-  width: 360px;
+.panel-container {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  box-shadow: none;
-  border: none;
+  width: 100%;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 0 20px;
+  height: 60px;
+  border-bottom: 1px solid #e7e9eb;
+  flex-shrink: 0;
+}
+
+.panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.panel-content {
+  padding: 12px;
   overflow-y: auto;
-  background-color: #fff;
-  .title {
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-    color: $primary-color;
-    padding-left: 20px;
-    // background: #f9fafc;
-    border-bottom: 1px solid #edeffc;
-  }
-  .content {
-    padding: 12px;
-  }
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    .tag {
-      width: 65px;
-      margin: 5px 2px;
-      cursor: pointer;
-      flex: auto;
-      &.current {
-        color: $primary-color;
-        background-color: $primary-bg-color;
-      }
-    }
-  }
-  .banner-list-wrapper {
-    padding: 15px 3px 100px 3px;
-    overflow-x: hidden;
+  flex-grow: 1;
+}
 
-    .banner-img {
-      position: relative;
-      margin-bottom: 10px;
-      width: 100%;
-      // min-height: 111px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border-radius: 4px;
-      &:hover {
-        -webkit-filter: brightness(90%);
-        filter: brightness(90%);
-      }
-    }
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
 
-    :deep(.el-collapse-item__header) {
-      font-size: 16px;
-      color: $font-color-title;
-      border-bottom: none;
-    }
+  .tag {
+    margin: 0;
+    cursor: pointer;
+    border-radius: 16px;
+    padding: 4px 12px;
+    border: 1px solid #dcdfe6;
+    background-color: #f4f4f5;
+    color: #606266;
+    transition: all 0.2s ease;
 
-    :deep(.el-collapse-item__arrow.is-active) {
-      right: 0;
+    &:hover {
+      border-color: $primary-color;
     }
-    :deep(.el-collapse-item__arrow) {
-      right: 0;
+    
+    &.current {
+      color: #fff;
+      background-color: $primary-color;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.banner-list-wrapper {
+  overflow-x: hidden;
+  padding-bottom: 50px;
+
+  .banner-img {
+    margin-bottom: 10px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
+    border: 1px solid #eee;
+
+    &:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
   }
 }

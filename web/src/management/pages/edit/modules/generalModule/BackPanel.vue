@@ -1,7 +1,7 @@
 <template>
   <div class="back-btn" @click="handleNavigateHome">
     <i class="iconfont icon-fanhui"></i>
-    <span>返回</span>
+    <span>Kembali</span>
   </div>
 </template>
 <script setup lang="ts">

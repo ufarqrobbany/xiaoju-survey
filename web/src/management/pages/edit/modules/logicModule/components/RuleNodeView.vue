@@ -17,15 +17,15 @@
       ></ConditionView>
       <div class="target-wrapper">
         <div class="line">
-          <span class="desc">则显示</span>
+          <span class="desc">Lalu Tampilkan</span>
           <el-form-item
             prop="target"
-            :rules="[{ required: true, message: '请选择目标', trigger: 'change' }]"
+            :rules="[{ required: true, message: 'Pilih target', trigger: 'change' }]"
           >
             <el-select
               class="select field-select"
               v-model="ruleTarget"
-              placeholder="请选择"
+              placeholder="Pilih target"
               @change="(val: any) => handleChange(ruleNode, 'target', val)"
             >
               <el-option
@@ -36,7 +36,7 @@
                 :value="value"
               >
               </el-option>
-              <template #empty> 无数据 </template>
+              <template #empty> Tidak ada data </template>
             </el-select>
           </el-form-item>
         </div>
@@ -78,9 +78,9 @@ const handleChange = (ruleNode: any, key: any, value: any) => {
   }
 }
 const handleDelete = async (id: any) => {
-  await ElMessageBox.confirm('是否确认删除规则？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+  await ElMessageBox.confirm('Apakah Anda yakin ingin menghapus aturan ini?', 'Peringatan', {
+    confirmButtonText: 'Konfirmasi',
+    cancelButtonText: 'Batalkan',
     type: 'warning'
   })
   emit('delete', id)
