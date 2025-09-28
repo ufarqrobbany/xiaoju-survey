@@ -1,13 +1,18 @@
 <template>
   <div class="content-page-wrapper">
-    <aside :class="['side-panel', 'left-panel', { 'is-visible': uiStore.isCatalogVisible }]">
-      <CatalogPanel />
-    </aside>
-
     <main class="center-content">
       <PreviewPanel />
     </main>
 
+    <div 
+      v-if="isPanelOpen && isMobile"
+      class="backdrop" 
+      @click="uiStore.closeAllPanels"
+    ></div>
+
+    <aside :class="['side-panel', 'left-panel', { 'is-visible': uiStore.isCatalogVisible }]">
+      <CatalogPanel />
+    </aside>
     <aside :class="['side-panel', 'right-panel', { 'is-visible': uiStore.isSetterVisible }]">
       <SetterPanel />
     </aside>
@@ -23,59 +28,82 @@ import PreviewPanel from '../../modules/skinModule/PreviewPanel.vue'
 import SetterPanel from '../../modules/skinModule/SetterPanel.vue'
 
 const uiStore = useUiStore()
-// State dari Pinia store akan mengontrol class 'is-visible'
 const { isCatalogVisible, isSetterVisible } = storeToRefs(uiStore)
+const isPanelOpen = computed(() => isCatalogVisible.value || isSetterVisible.value)
+const isMobile = computed(() => window.innerWidth < 768)
 </script>
 
 <style lang="scss" scoped>
 .content-page-wrapper {
-  display: flex;
-  /* KUNCI UTAMA: Pusatkan semua item di dalamnya secara horizontal */
-  justify-content: center; 
-  align-items: flex-start;
+  position: relative;
   height: 100%;
   width: 100%;
-  padding: 24px;
-  /* Beri jarak antar panel saat muncul bersamaan */
-  gap: 24px; 
   overflow: hidden;
-  box-sizing: border-box;
-  /* Transisi untuk semua perubahan layout di dalam wrapper */
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .center-content {
-  /* Biarkan konten tengah mengisi ruang sisa & bisa menyusut */
-  flex: 1 1 auto;
-  min-width: 0; /* Wajib untuk flexbox agar tidak overflow */
   height: 100%;
-  display: flex;
-  justify-content: center; /* Memastikan isi dari PreviewPanel tetap di tengah */
+  width: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
+/* --- PERBAIKAN RESPONSIVITAS PANEL --- */
+
+/* Style Mobile (Default) */
 .side-panel {
-  width: 360px; /* Lebar standar panel */
-  height: 100%;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
+  position: fixed;
+  /* KUNCI PERBAIKAN: Beri jarak dari atas sebesar tinggi toolbar (64px) */
+  top: 64px;
+  bottom: 0;
+  width: 300px;
+  max-width: 85vw;
+  z-index: 999;
+  transition: transform 0.3s ease-in-out;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
   
-  /* PERBAIKAN: Sembunyikan panel dengan mengubah lebarnya */
-  flex-shrink: 0; /* Jangan biarkan panel ini menyusut */
-  width: 0;
-  opacity: 0;
-  padding: 0;
-  border: 0;
-
-  /* Transisi untuk animasi muncul/hilang yang mulus */
-  transition: width 0.35s ease, opacity 0.2s ease, padding 0.35s ease, border 0.35s ease;
-
-  /* Saat panel aktif (class .is-visible ditambahkan) */
+  transform: translateX(-100%);
+  &.right-panel {
+    right: 0;
+    transform: translateX(100%);
+  }
   &.is-visible {
-    width: 360px;
-    opacity: 1;
-    border: 1px solid #e8e8e8;
+    transform: translateX(0);
+  }
+}
+
+.backdrop {
+  position: fixed;
+  top: 64px; /* Backdrop juga harus mulai di bawah toolbar */
+  left: 0;
+  width: 100%;
+  height: calc(100% - 64px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+/* Style Desktop */
+@media (min-width: 768px) {
+  .content-page-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .side-panel {
+    position: relative; /* Kembalikan ke layout normal */
+    top: auto; /* Hapus offset atas */
+    bottom: auto;
+    flex-shrink: 0;
+    box-shadow: none;
+    transition: width 0.3s ease;
+    transform: none !important;
+
+    &:not(.is-visible) {
+      width: 0;
+    }
+  }
+  .backdrop {
+    display: none;
   }
 }
 </style>

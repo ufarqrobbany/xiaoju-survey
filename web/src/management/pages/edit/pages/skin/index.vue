@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-// Impor komponen toolbar baru kita
 import MainToolbar from '../../components/MainToolbar.vue' 
 </script>
 
@@ -21,14 +20,16 @@ import MainToolbar from '../../components/MainToolbar.vue'
 .page-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; // Mengisi seluruh tinggi viewport
+  height: 100vh;
+  width: 100%;
   background-color: #f7f9fc;
+  overflow: hidden; /* Mencegah body dari scrolling */
 }
 
 .content-view-wrapper {
   flex-grow: 1;
-  position: relative;
-  overflow: hidden; // Penting untuk transisi
+  position: relative; /* Penting agar child dengan position:absolute/fixed terkunci di sini */
+  min-height: 0; /* Kunci agar flexbox tidak 'mendorong' layout */
 }
 
 .fade-enter-active,

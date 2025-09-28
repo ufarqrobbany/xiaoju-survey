@@ -45,28 +45,13 @@ import { getBannerData } from '@/management/api/skin.js'
 import skinPresets from '@/management/config/skinPresets.js'
 import { Close } from '@element-plus/icons-vue'
 
-// --- Definisi Tipe untuk Keamanan dan Kejelasan Kode ---
-interface BannerItem {
-  src: string;
-  title: string;
-  group: string;
-}
-
-interface BannerGroup {
-  key: string;
-  name: string;
-  list: BannerItem[];
-}
-
-interface BannerData {
-  [key: string]: BannerGroup;
-}
-// ---
+interface BannerItem { src: string; title: string; group: string; }
+interface BannerGroup { key: string; name: string; list: BannerItem[]; }
+interface BannerData { [key: string]: BannerGroup; }
 
 const uiStore = useUiStore()
 const editStore = useEditStore()
 const { changeThemePreset } = editStore
-
 const groupName = ref<string>('temp')
 const bannerList = ref<BannerData>({})
 
@@ -75,30 +60,14 @@ onMounted(async () => {
   bannerList.value = res.data
 })
 
-const groupList = computed(() =>
-  Object.entries(bannerList.value).map(([key, group]) => ({
-    label: group.name,
-    value: key
-  }))
-)
-
-const allBanners = computed(() =>
-  Object.values(bannerList.value).flatMap(group =>
-    group.list.map(item => ({ ...item, group: group.key }))
-  )
-)
-
+const groupList = computed(() => Object.entries(bannerList.value).map(([key, group]) => ({ label: group.name, value: key })))
+const allBanners = computed(() => Object.values(bannerList.value).flatMap(group => group.list.map(item => ({ ...item, group: group.key }))))
 const currentBannerList = computed(() => {
-  if (groupName.value === 'temp') {
-    return allBanners.value
-  }
+  if (groupName.value === 'temp') return allBanners.value
   return allBanners.value.filter(item => item.group === groupName.value)
 })
 
-const handleChangeGroup = (value: string) => {
-  groupName.value = value
-}
-
+const handleChangeGroup = (value: string) => { groupName.value = value }
 const changePreset = (banner: BannerItem) => {
   const name = `${banner.group}-${banner.title}`
   let presets = {
@@ -106,18 +75,16 @@ const changePreset = (banner: BannerItem) => {
     'skinConf.themeConf.color': '#faa600',
     'skinConf.backgroundConf.color': '#f6f7f9'
   }
-
   const presetConfig = (skinPresets as Record<string, any>)[name];
-
   if (presetConfig) {
     presets = { ...presets, ...presetConfig }
   }
-
   changeThemePreset(presets)
 }
 </script>
 
 <style lang="scss" scoped>
+/* --- Mobile First Base Styles (Default) --- */
 .panel-container {
   display: flex;
   flex-direction: column;
@@ -129,7 +96,7 @@ const changePreset = (banner: BannerItem) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 12px 0 20px;
+  padding: 0 16px; /* Padding lebih rapat untuk mobile */
   height: 60px;
   border-bottom: 1px solid #e7e9eb;
   flex-shrink: 0;
@@ -143,7 +110,7 @@ const changePreset = (banner: BannerItem) => {
 }
 
 .panel-content {
-  padding: 12px;
+  padding: 16px; /* Padding lebih rapat untuk mobile */
   overflow-y: auto;
   flex-grow: 1;
 }
@@ -152,10 +119,9 @@ const changePreset = (banner: BannerItem) => {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 
   .tag {
-    margin: 0;
     cursor: pointer;
     border-radius: 16px;
     padding: 4px 12px;
@@ -181,7 +147,7 @@ const changePreset = (banner: BannerItem) => {
   padding-bottom: 50px;
 
   .banner-img {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     width: 100%;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -192,6 +158,18 @@ const changePreset = (banner: BannerItem) => {
       transform: scale(1.03);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
+  }
+}
+
+/* --- Tablet & Desktop Styles --- */
+@media (min-width: 768px) {
+  .panel-header {
+    /* Kembalikan padding normal untuk desktop */
+    padding: 0 12px 0 20px;
+  }
+  .panel-content {
+    /* Kembalikan padding normal untuk desktop */
+    padding: 12px;
   }
 }
 </style>

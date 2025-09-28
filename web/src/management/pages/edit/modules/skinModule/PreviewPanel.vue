@@ -57,6 +57,8 @@ const {
 </script>
 
 <style lang="scss" scoped>
+/* --- Mobile First Base Styles (Default) --- */
+
 .main-operation {
   width: 100%;
   height: 100%;
@@ -64,63 +66,72 @@ const {
   flex-direction: column;
   align-items: center;
   background: var(--primary-background);
-  padding: 24px;
+  /* Padding minimal di mobile */
+  padding: 16px; 
   box-sizing: border-box;
 }
 
 .pagination-wrapper {
-  position: relative;
   width: 100%;
-  max-width: 700px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   flex-shrink: 0;
 }
 
 .operation-wrapper {
   width: 100%;
   flex-grow: 1;
-  
-  /* --- PERBAIKAN UTAMA (1/3) --- */
-  /* Biarkan scrollbar muncul secara otomatis saat konten meluap */
-  overflow-y: auto;
-  /* Properti ini mencegah flex item meluap dari containernya saat kontennya terlalu besar */
   min-height: 0;
 
-  /* Styling untuk scrollbar agar lebih modern (opsional) */
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
-  }
-
   .box {
-    position: relative;
     width: 100%;
-    max-width: 700px;
+    height: 100%;
     margin: 0 auto;
     background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    /* --- PERBAIKAN UTAMA (2/3) --- */
-    /* Ubah border-radius sesuai permintaan */
-    border-radius: 10px;
     
-    /* overflow: hidden; Dihapus agar shadow dari elemen di dalam (jika ada) bisa terlihat */
+    /* Di mobile, box menyatu dengan layar */
+    box-shadow: none;
+    border-radius: 0;
+    
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar { display: none; }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
 .content {
-  /* --- PERBAIKAN UTAMA (3/3) --- */
-  /* Tambahkan padding-bottom agar ada ruang napas di akhir scroll */
-  padding: 24px 32px 48px 32px;
+  /* Padding konten yang pas untuk mobile */
+  padding: 16px 20px 32px 20px;
+}
+
+/* --- Tablet & Desktop Styles --- */
+@media (min-width: 768px) {
+  .main-operation {
+    /* Kembalikan padding yang lebih lega untuk desktop */
+    padding: 24px;
+  }
+
+  .pagination-wrapper {
+    max-width: 700px; /* Batasi lebar paginasi di desktop */
+    margin-bottom: 24px;
+  }
+
+  .operation-wrapper {
+    overflow: hidden; /* Sembunyikan overflow di wrapper luar */
+  }
+  
+  .operation-wrapper .box {
+    /* Kembalikan tampilan 'kartu' di desktop */
+    max-width: 700px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+  }
+
+  .content {
+    /* Kembalikan padding konten yang lebih lega di desktop */
+    padding: 24px 32px 48px 32px;
+  }
 }
 </style>

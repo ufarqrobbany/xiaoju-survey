@@ -1,6 +1,6 @@
 <template>
   <div class="page-controls-strip">
-    <div class="controls-group left">
+    <div class="controls-group left desktop-only">
       <el-button :icon="Plus" type="primary" plain @click="addPageControls">
         Halaman Baru
       </el-button>
@@ -15,35 +15,22 @@
 
     <div class="controls-group right">
       <el-tooltip content="Pindah ke Atas" placement="top">
-        <el-button
-          :icon="Top"
-          circle
-          :disabled="schema.pageEditOne === 1"
-          @click="movePage('up')"
-        />
+        <el-button :icon="Top" circle :disabled="schema.pageEditOne === 1" @click="movePage('up')" />
       </el-tooltip>
       <el-tooltip content="Pindah ke Bawah" placement="top">
-        <el-button
-          :icon="Bottom"
-          circle
-          :disabled="schema.pageEditOne === pageCount"
-          @click="movePage('down')"
-        />
+        <el-button :icon="Bottom" circle :disabled="schema.pageEditOne === pageCount" @click="movePage('down')" />
       </el-tooltip>
       <el-tooltip content="Salin Halaman" placement="top">
         <el-button :icon="CopyDocument" circle @click="copyPage(schema.pageEditOne)" />
       </el-tooltip>
       <el-tooltip content="Hapus Halaman" placement="top">
-        <el-button
-          :icon="Delete"
-          circle
-          type="danger"
-          plain
-          :disabled="pageCount <= 1"
-          @click="deletePage(schema.pageEditOne)"
-        />
+        <el-button :icon="Delete" circle type="danger" plain :disabled="pageCount <= 1" @click="deletePage(schema.pageEditOne)" />
       </el-tooltip>
     </div>
+  </div>
+
+  <div class="mobile-fab">
+    <el-button :icon="Plus" type="primary" circle @click="addPageControls" />
   </div>
 </template>
 
@@ -52,7 +39,6 @@ import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import { QUESTION_TYPE } from '@/common/typeEnum.ts'
 import { Top, Bottom, Plus, CopyDocument, Delete } from '@element-plus/icons-vue'
-
 import PaginationPanel from './PaginationPanel.vue'
 
 const props = defineProps({
@@ -65,7 +51,6 @@ const props = defineProps({
 const editStore = useEditStore()
 const { pageCount, schema, newQuestionIndex } = storeToRefs(editStore)
 const { getSorter } = editStore
-
 const {
   updatePageEditOne,
   addPage,
@@ -109,46 +94,63 @@ const addPageControls = () => {
 </script>
 
 <style lang="scss" scoped>
+/* --- Mobile First Base Styles --- */
+
 .page-controls-strip {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Pusatkan item di mobile */
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   width: 100%;
-  
-  /* --- PERBAIKAN UTAMA --- */
-  padding: 12px 16px; /* Beri padding vertikal dan horizontal */
+  padding: 12px;
   background-color: #ffffff;
-  border-radius: 12px; /* Sudut lebih tumpul untuk tampilan modern */
-  border: 1px solid #e7e9eb; /* Tambahkan border tipis */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Shadow lebih lembut */
+  border-radius: 12px;
+  border: 1px solid #e7e9eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }
 
 .controls-group {
   display: flex;
   align-items: center;
-  gap: 10px; /* Jarak antar tombol di dalam grup */
+  gap: 10px;
 }
 
-/* Di mobile, tombol aksi pindah ke kiri agar lebih hemat tempat */
-@media (max-width: 768px) {
+.controls-group.left {
+  display: none; /* Sembunyikan tombol "Halaman Baru" versi desktop di mobile */
+}
+
+/* Floating Action Button untuk Mobile */
+.mobile-fab {
+  display: block; /* Tampilkan FAB di mobile */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  
+  .el-button {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* --- Tablet & Desktop Styles --- */
+@media (min-width: 768px) {
   .page-controls-strip {
-    flex-wrap: wrap; 
-    gap: 12px;
-    padding: 12px;
-    justify-content: center;
+    flex-wrap: nowrap; /* Kembali ke satu baris */
+    justify-content: space-between;
+    padding: 12px 16px;
   }
-  .left {
-    order: 2;
+
+  .controls-group.left {
+    display: flex; /* Tampilkan kembali tombol "Halaman Baru" versi desktop */
   }
-  .right {
-    order: 1;
-    flex-grow: 1;
-    justify-content: center;
-  }
-  /* Sembunyikan tombol "Halaman Baru" di mobile untuk menghemat ruang */
-  .left .el-button {
-    display: none;
+
+  .mobile-fab {
+    display: none; /* Sembunyikan FAB di desktop */
   }
 }
 </style>

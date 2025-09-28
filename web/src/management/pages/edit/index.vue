@@ -1,9 +1,9 @@
 <template>
   <div class="edit-layout">
     <div class="main-content">
-      <CommonTemplate style="background-color: #f6f7f9">
+      <CommonTemplate>
         <template #nav>
-          <Navbar class="navbar"></Navbar>
+          <Navbar />
         </template>
         <template #body>
           <router-view></router-view>
@@ -75,23 +75,23 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .edit-layout {
   display: flex;
-  /* Layout sekarang hanya satu kolom utama yang membentang secara horizontal */
-  flex-direction: row; 
+  flex-direction: column; /* Mulai dengan layout kolom untuk mobile-first */
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
-  background-color: #f6f7f9;
+  overflow: hidden; /* Mencegah body scroll */
 }
 
 .main-content {
   flex: 1;
-  min-width: 0; 
-  height: 100%;
-  overflow: hidden;
-  display: flex; /* Memastikan CommonTemplate mengisi semua ruang */
+  min-height: 0; /* Penting untuk flexbox agar tidak overflow */
+  display: flex;
+  flex-direction: column;
 }
 
-.navbar {
-  border-bottom: 1px solid #e7e9eb;
+/* Terapkan layout baris hanya untuk layar desktop */
+@media (min-width: 768px) {
+  .edit-layout {
+    flex-direction: row;
+  }
 }
 </style>
