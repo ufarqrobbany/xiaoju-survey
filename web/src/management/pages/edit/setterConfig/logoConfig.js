@@ -1,7 +1,8 @@
 export default [
   {
     label: 'Logo Kustom',
-    type: 'InputSetter',
+    type: 'UploadSingleFile',
+    accept: 'image/*',
     key: 'logoImage',
     tip: 'Ukuran default 200px*50px',
     labelStyle: { width: '120px' }

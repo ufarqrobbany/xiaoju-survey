@@ -29,9 +29,9 @@ import { get as _get } from 'lodash-es'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { useUserStore } from '@/management/stores/user'
 
-const upload = ref<UploadInstance>()
-
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+
+const upload = ref<UploadInstance>()
 
 interface IProps {
   formConfig: any
@@ -70,6 +70,10 @@ function onSuccess(response: any) {
   if (response?.data?.url) {
     const key = props.formConfig.key
     emit(FORM_CHANGE_EVENT_KEY, { key, value: response.data.url })
+    // *** BARIS KODE PERBAIKAN DI BAWAH INI ***
+    upload.value!.clearFiles() // Reset daftar file setelah berhasil
+  } else {
+    ElMessage.error(response.msg || 'Unggahan gagal')
   }
 }
 
@@ -77,7 +81,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   const { limitSize } = props.formConfig
   if (limitSize) {
     if (rawFile.size / 1024 / 1024 > limitSize) {
-      ElMessage.error(`图片大小不得超过 ${limitSize}MB!`)
+      ElMessage.error(`Ukuran gambar tidak boleh melebihi ${limitSize}MB!`)
       return false
     }
   }

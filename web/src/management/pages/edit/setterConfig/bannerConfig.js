@@ -1,7 +1,8 @@
 export default [
   {
     label: 'Alamat gambar teratas',
-    type: 'InputSetter',
+    type: 'UploadSingleFile',
+    accept: 'image/*',
     key: 'bgImage',
     labelStyle: { width: '120px' }
   },
