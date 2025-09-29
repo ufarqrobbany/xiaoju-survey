@@ -19,7 +19,7 @@
           v-for="(banner, bannerIndex) in currentBannerList"
           :key="bannerIndex"
         >
-          <img class="banner-img" :src="banner.src" loading="lazy" @click="changePreset(banner)" />
+          <img class="banner-img" :src="banner.src" @click="changePreset(banner)" alt="banner" fetchpriority="high"/>
         </div>
       </div>
     </div>

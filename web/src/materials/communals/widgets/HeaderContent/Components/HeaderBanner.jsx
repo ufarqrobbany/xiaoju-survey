@@ -46,7 +46,7 @@ export default defineComponent({
       if (bgImage.value) {
         return (
           <div class="banner">
-            <img src={bgImage.value} {...attribute} />
+            <img src={bgImage.value} {...attribute} alt="Banner-Default" fetchpriority="high"/>
           </div>
         )
       }

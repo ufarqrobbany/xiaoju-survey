@@ -1,11 +1,12 @@
-import { defineComponent } from 'vue'
+import { defineComponent, resolveDynamicComponent } from 'vue'
 import './style.scss'
 
 export default defineComponent({
   name: 'BaseInput',
   props: {
     uiTarget: {
-      type: String,
+      // bisa string ('input' | 'textarea') atau komponen
+      type: [String, Object],
       default: 'input'
     },
     customClass: {
@@ -23,6 +24,10 @@ export default defineComponent({
     name: {
       type: String,
       default: ''
+    },
+    label: {
+      type: String,
+      default: '' // <--- tambahkan label sebagai prop
     },
     readonly: {
       type: Boolean,
@@ -47,18 +52,20 @@ export default defineComponent({
   },
   emits: ['input', 'change', 'blur', 'focus'],
   setup(props, { emit }) {
-    const onBlur = () => {
-      emit('blur')
+    const onBlur = (e) => {
+      emit('blur', e)
     }
     const onInput = (e) => {
-      emit('input', e)
+      // emit value agar mudah dipakai seperti v-model; ubah jika perlu emit event lengkap
+      const v = e && e.target ? e.target.value : e
+      emit('input', v)
     }
     const onChange = (e) => {
       emit('change', e)
     }
-    const onFocus = () => {
+    const onFocus = (e) => {
       if (props.readonly) return false
-      emit('focus')
+      emit('focus', e)
     }
     return {
       onBlur,
@@ -67,12 +74,26 @@ export default defineComponent({
       onChange
     }
   },
-  render() {
+    render() {
     const { uiTarget, customClass } = this
+    const inputId = this.name || 'input-' + Math.random().toString(36).slice(2, 9)
+    const labelId = `${inputId}-label`
+
+    const Comp = resolveDynamicComponent(uiTarget) // <- penting
+
+    const ariaLabel = this.label || this.placeholder || this.name || undefined
+    const ariaLabelledby = this.label ? labelId : undefined
 
     return (
       <div class="input-wrapper">
-        <uiTarget
+        {this.label ? (
+          <label id={labelId} for={inputId} class="input-label">
+            {this.label}
+          </label>
+        ) : null}
+
+        <Comp
+          id={inputId}
           class={['input-box item-border', customClass]}
           type={this.type}
           name={this.name}
@@ -82,7 +103,9 @@ export default defineComponent({
           value={this.value}
           maxlength={this.maxlength}
           minlength={this.minlength}
-          autocomplete={'off'}
+          autocomplete="off"
+          aria-label={this.label ? undefined : ariaLabel}
+          aria-labelledby={this.label ? ariaLabelledby : undefined}
           onInput={this.onInput}
           onBlur={this.onBlur}
           onChange={this.onChange}

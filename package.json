@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@vueuse/head": "^2.0.0"
+  },
+  "devDependencies": {
+    "vite-plugin-compression": "^0.5.1"
+  }
+}

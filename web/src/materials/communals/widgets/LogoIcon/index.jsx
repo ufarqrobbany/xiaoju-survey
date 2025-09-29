@@ -55,7 +55,7 @@ export default defineComponent({
       <div class="logo-icon-warp" onClick={this.onSelect}>
         <div class="question-logo">
           {this.logoImage ? (
-            <img src={this.logoImage} style={{ width: this.logoImageWidth }} />
+            <img src={this.logoImage} style={{ width: this.logoImageWidth }} alt="question-logo"/>
           ) : (
             this.noLogoRender()
           )}
