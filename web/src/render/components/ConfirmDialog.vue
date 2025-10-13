@@ -9,6 +9,7 @@
         <div v-if="formValues && formValues.length" class="body-content">
           <div class="form-item" v-for="item in formValues" :key="item.key">
             <div class="input-wrapper">
+              <label for="answer">Answer: </label>
               <input
                 class="input-inner"
                 :name="item.key"

@@ -28,7 +28,7 @@ import { get as _get } from 'lodash-es'
 
 import '@wangeditor/editor/dist/css/style.css'
 import './styles/reset-wangeditor.scss'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { Ediitor, Toolbar } from '@wangeditor/editor-for-vue'
 
 import { useUserStore } from '@/management/stores/user'
 import { replacePxWithRem } from './utils'

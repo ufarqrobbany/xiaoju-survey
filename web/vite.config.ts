@@ -12,6 +12,8 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
+import viteCompression from 'vite-plugin-compression'
+
 const isProd = process.env.NODE_ENV === 'production'
 
 const pages = createPages([
@@ -75,6 +77,10 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    viteCompression({
+      algorithm: 'brotliCompress', // bisa juga 'gzip'
+      threshold: 1024, // hanya compress file > 1kb
+    }),
     AutoImport({
       resolvers: [
         ElementPlusResolver(),
@@ -87,7 +93,7 @@ export default defineConfig({
     Components({
       resolvers: [
         ElementPlusResolver({
-          importStyle: 'sass'
+          importStyle: 'css'
         }),
         // Auto register icon components
         IconsResolver({
@@ -144,23 +150,12 @@ export default defineConfig({
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
         manualChunks(id) {
-          // 建议根据项目生产实际情况进行优化，部分可走cdn或进行小资源包合并
-          if (id.includes('element-plus')) {
-            return 'element-plus'
-          }
-          if (id.includes('wangeditor')) {
-            return 'wangeditor'
-          }
-          if (id.includes('node-forg')) {
-            return 'node-forg'
-          }
-          if (id.includes('echarts')) {
-            return 'echarts'
-          }
-
-          if (id.includes('node_modules')) {
-            return 'packages'
-          }
+          if (id.includes('element-plus')) return 'element-plus'
+          if (id.includes('wangeditor')) return 'wangeditor'
+          if (id.includes('echarts')) return 'echarts'
+          if (id.includes('node-forge')) return 'node-forge'
+          if (id.includes('moment')) return 'moment'
+          if (id.includes('node_modules')) return 'vendor'
         }
       }
     }
